@@ -87,7 +87,10 @@ export function CategoryPicker({
                     : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50',
                 )}
               >
-                <Icon className={cn('size-5 shrink-0', active ? 'text-brand-700' : 'text-slate-400')} aria-hidden="true" />
+                <Icon
+                  className={cn('size-5 shrink-0', active ? 'text-brand-700' : 'text-slate-400')}
+                  aria-hidden="true"
+                />
                 {c.name}
               </button>
             );

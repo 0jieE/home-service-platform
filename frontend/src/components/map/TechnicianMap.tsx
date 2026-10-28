@@ -58,7 +58,15 @@ export function TechnicianMap({
 }
 
 /** Single location (booking detail, technician detail). */
-export function PointMap({ point, title, className = 'h-56' }: { point: Point | null; title: string; className?: string }) {
+export function PointMap({
+  point,
+  title,
+  className = 'h-56',
+}: {
+  point: Point | null;
+  title: string;
+  className?: string;
+}) {
   if (!point || !isValidPoint(point)) return null;
   return (
     <BaseMap className={className} center={point} zoom={15} ariaLabel={`Map: ${title}`}>

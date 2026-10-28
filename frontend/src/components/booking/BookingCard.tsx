@@ -5,10 +5,22 @@ import type { Booking, Role } from '@/types/api';
 import { BookingStatusBadges } from './StatusBadge';
 
 export function bookingPath(role: Role, id: number) {
-  return role === 'customer' ? `/c/bookings/${id}` : role === 'technician' ? `/t/jobs/${id}` : `/a/bookings/${id}`;
+  return role === 'customer'
+    ? `/c/bookings/${id}`
+    : role === 'technician'
+      ? `/t/jobs/${id}`
+      : `/a/bookings/${id}`;
 }
 
-export function BookingCard({ booking, viewer, highlight }: { booking: Booking; viewer: Role; highlight?: boolean }) {
+export function BookingCard({
+  booking,
+  viewer,
+  highlight,
+}: {
+  booking: Booking;
+  viewer: Role;
+  highlight?: boolean;
+}) {
   const other = viewer === 'customer' ? booking.technician : booking.customer;
   const otherLabel = viewer === 'customer' ? 'Technician' : 'Customer';
   return (

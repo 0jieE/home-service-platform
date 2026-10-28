@@ -1,11 +1,7 @@
 import { z } from 'zod';
 
 const trimmed = (label: string, max = 150) =>
-  z
-    .string()
-    .trim()
-    .min(1, `${label} is required`)
-    .max(max, `${label} must be at most ${max} characters`);
+  z.string().trim().min(1, `${label} is required`).max(max, `${label} must be at most ${max} characters`);
 
 export const phoneSchema = z
   .string()
@@ -106,7 +102,11 @@ export type TechnicianProfileValues = z.input<typeof technicianProfileSchema>;
 
 /** Reason that is required (cancel an accepted booking, dispute, reject). */
 export const requiredReasonSchema = z.object({
-  reason: z.string().trim().min(5, 'Please give a reason (at least 5 characters)').max(500, 'Keep it under 500 characters'),
+  reason: z
+    .string()
+    .trim()
+    .min(5, 'Please give a reason (at least 5 characters)')
+    .max(500, 'Keep it under 500 characters'),
 });
 export const optionalReasonSchema = z.object({
   reason: z.string().trim().max(500, 'Keep it under 500 characters'),
@@ -167,7 +167,10 @@ export const generateScheduleSchema = z
     to: z.string().min(1, 'Choose an end date'),
   })
   .refine((v) => v.end_time > v.start_time, { path: ['end_time'], message: 'End must be after start' })
-  .refine((v) => !v.from || !v.to || v.to >= v.from, { path: ['to'], message: 'End date must be on or after start date' });
+  .refine((v) => !v.from || !v.to || v.to >= v.from, {
+    path: ['to'],
+    message: 'End date must be on or after start date',
+  });
 export type GenerateScheduleValues = z.infer<typeof generateScheduleSchema>;
 
 export const applicationSchema = z.object({
@@ -202,17 +205,33 @@ export type CategoryValues = z.infer<typeof categorySchema>;
 
 export const resolveDisputeSchema = z.object({
   decision: z.enum(['completed', 'cancelled', 'return_in_progress'], { error: 'Choose a decision' }),
-  admin_notes: z.string().trim().min(5, 'Record the reason for the decision (at least 5 characters)').max(1000),
+  admin_notes: z
+    .string()
+    .trim()
+    .min(5, 'Record the reason for the decision (at least 5 characters)')
+    .max(1000),
 });
 export type ResolveDisputeValues = z.infer<typeof resolveDisputeSchema>;
 
 const EPS = 1e-9;
 export const recSettingsSchema = z
   .object({
-    w_p: z.number({ error: 'Enter a number' }).min(0, 'Must be between 0 and 1').max(1, 'Must be between 0 and 1'),
-    w_r: z.number({ error: 'Enter a number' }).min(0, 'Must be between 0 and 1').max(1, 'Must be between 0 and 1'),
-    d0_km: z.number({ error: 'Enter a number' }).gt(0, 'Must be greater than 0').max(50, 'Must be at most 50 km'),
-    no_rating_q: z.number({ error: 'Enter a number' }).min(0, 'Must be between 0 and 1').max(1, 'Must be between 0 and 1'),
+    w_p: z
+      .number({ error: 'Enter a number' })
+      .min(0, 'Must be between 0 and 1')
+      .max(1, 'Must be between 0 and 1'),
+    w_r: z
+      .number({ error: 'Enter a number' })
+      .min(0, 'Must be between 0 and 1')
+      .max(1, 'Must be between 0 and 1'),
+    d0_km: z
+      .number({ error: 'Enter a number' })
+      .gt(0, 'Must be greater than 0')
+      .max(50, 'Must be at most 50 km'),
+    no_rating_q: z
+      .number({ error: 'Enter a number' })
+      .min(0, 'Must be between 0 and 1')
+      .max(1, 'Must be between 0 and 1'),
     is_frozen: z.boolean(),
   })
   .refine((v) => Math.abs(v.w_p + v.w_r - 1) < 1e-6 + EPS, {

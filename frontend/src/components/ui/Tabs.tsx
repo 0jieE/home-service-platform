@@ -31,7 +31,11 @@ export function Tabs<T extends string>({
     onChange(items[next]!.value);
   };
   return (
-    <div role="tablist" aria-label={label} className={cn('flex gap-1 overflow-x-auto border-b border-slate-200', className)}>
+    <div
+      role="tablist"
+      aria-label={label}
+      className={cn('flex gap-1 overflow-x-auto border-b border-slate-200', className)}
+    >
       {items.map((item, i) => {
         const active = item.value === value;
         return (

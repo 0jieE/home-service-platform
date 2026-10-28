@@ -10,7 +10,9 @@ export function CoverageWarningBadge() {
   return (
     <Link to="/a/coverage" title={`${data.name} · ${data.source}`}>
       <Badge tone="amber" icon={<TriangleAlert className="size-3.5" />}>
-        {data.is_placeholder ? 'Placeholder city boundary — not for formal testing' : 'City boundary not verified'}
+        {data.is_placeholder
+          ? 'Placeholder city boundary — not for formal testing'
+          : 'City boundary not verified'}
       </Badge>
     </Link>
   );

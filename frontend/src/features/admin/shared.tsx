@@ -29,7 +29,11 @@ export const OUTCOME_LABEL: Record<VerificationOutcome, string> = {
   not_verified: 'Not verified',
   inconclusive: 'Inconclusive',
 };
-const OUTCOME_TONE: Record<VerificationOutcome, BadgeTone> = { verified: 'green', not_verified: 'red', inconclusive: 'amber' };
+const OUTCOME_TONE: Record<VerificationOutcome, BadgeTone> = {
+  verified: 'green',
+  not_verified: 'red',
+  inconclusive: 'amber',
+};
 
 export function OutcomeBadge({ outcome }: { outcome: VerificationOutcome }) {
   return <Badge tone={OUTCOME_TONE[outcome]}>{OUTCOME_LABEL[outcome]}</Badge>;

@@ -80,8 +80,16 @@ export function BookingConfirmModal({ draft, onClose }: { draft: BookingDraft | 
       <dl className="space-y-3 text-sm">
         <Row icon={<UserRound className="size-4" />} label="Technician" value={draft.technicianName} />
         <Row icon={<Wrench className="size-4" />} label="Service" value={draft.category.name} />
-        <Row icon={<CalendarClock className="size-4" />} label="When" value={formatRange(draft.start, draft.end)} />
-        <Row icon={<MapPin className="size-4" />} label="Where" value={draft.address || `${draft.location.lat.toFixed(5)}, ${draft.location.lng.toFixed(5)}`} />
+        <Row
+          icon={<CalendarClock className="size-4" />}
+          label="When"
+          value={formatRange(draft.start, draft.end)}
+        />
+        <Row
+          icon={<MapPin className="size-4" />}
+          label="Where"
+          value={draft.address || `${draft.location.lat.toFixed(5)}, ${draft.location.lng.toFixed(5)}`}
+        />
         {draft.distanceKm !== undefined && (
           <Row icon={<Ruler className="size-4" />} label="Distance" value={distanceLabel(draft.distanceKm)} />
         )}

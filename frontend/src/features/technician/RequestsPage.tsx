@@ -22,8 +22,9 @@ export function RequestsPage() {
       <PageHeader title="Booking requests" description="Customers waiting for your answer." />
       <Instructions title="Accept or decline">
         <p>
-          Accepting reserves the time. Availability and conflicts are checked again when you accept. Requests marked{' '}
-          <strong className="text-red-700">Time conflict</strong> overlap a job you already accepted and cannot be accepted — decline them so the customer can book someone else.
+          Accepting reserves the time. Availability and conflicts are checked again when you accept. Requests
+          marked <strong className="text-red-700">Time conflict</strong> overlap a job you already accepted
+          and cannot be accepted — decline them so the customer can book someone else.
         </p>
       </Instructions>
       {q.isLoading ? (
@@ -35,7 +36,11 @@ export function RequestsPage() {
           icon={<Inbox className="size-6" />}
           title="No pending requests"
           description="New requests appear here instantly. Keep your availability up to date."
-          action={<ButtonLink to="/t/availability" variant="outline">Manage availability</ButtonLink>}
+          action={
+            <ButtonLink to="/t/availability" variant="outline">
+              Manage availability
+            </ButtonLink>
+          }
         />
       ) : (
         <>
@@ -67,11 +72,32 @@ export function RequestsPage() {
                   </p>
                 )}
                 <dl className="mt-3 grid gap-1.5 text-sm text-slate-600 sm:grid-cols-2">
-                  <Item icon={<CalendarClock className="size-4" />} label="When" value={formatRange(b.start, b.end)} />
-                  <Item icon={<UserRound className="size-4" />} label="Customer" value={`${b.customer.full_name}${b.customer.phone ? ` · ${b.customer.phone}` : ''}`} />
+                  <Item
+                    icon={<CalendarClock className="size-4" />}
+                    label="When"
+                    value={formatRange(b.start, b.end)}
+                  />
+                  <Item
+                    icon={<UserRound className="size-4" />}
+                    label="Customer"
+                    value={`${b.customer.full_name}${b.customer.phone ? ` · ${b.customer.phone}` : ''}`}
+                  />
                   <Item icon={<MapPin className="size-4" />} label="Address" value={b.address} />
-                  {b.distance_km !== null && <Item icon={<Ruler className="size-4" />} label="Distance" value={distanceLabel(b.distance_km)} />}
-                  {b.notes && <Item icon={<StickyNote className="size-4" />} label="Notes" value={b.notes} className="sm:col-span-2" />}
+                  {b.distance_km !== null && (
+                    <Item
+                      icon={<Ruler className="size-4" />}
+                      label="Distance"
+                      value={distanceLabel(b.distance_km)}
+                    />
+                  )}
+                  {b.notes && (
+                    <Item
+                      icon={<StickyNote className="size-4" />}
+                      label="Notes"
+                      value={b.notes}
+                      className="sm:col-span-2"
+                    />
+                  )}
                 </dl>
                 <ActionBar booking={b} className="mt-4" />
               </li>
@@ -84,7 +110,17 @@ export function RequestsPage() {
   );
 }
 
-function Item({ icon, label, value, className }: { icon: React.ReactNode; label: string; value: string; className?: string }) {
+function Item({
+  icon,
+  label,
+  value,
+  className,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  className?: string;
+}) {
   return (
     <div className={cn('flex items-start gap-2', className)}>
       <span className="mt-0.5 text-slate-400">{icon}</span>

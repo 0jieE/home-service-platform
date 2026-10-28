@@ -19,11 +19,20 @@ export function CoveragePage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Coverage area" description="Customers and technicians must be inside this boundary." />
+      <PageHeader
+        title="Coverage area"
+        description="Customers and technicians must be inside this boundary."
+      />
       {c.is_placeholder || !c.verified ? (
-        <Alert tone="amber" icon={<TriangleAlert className="size-5" />} title={c.is_placeholder ? 'Development placeholder boundary' : 'Boundary not verified'}>
-          Replace it with the official Kidapawan City boundary (e.g. PSA/NAMRIA admin level 3 from HDX) using the backend
-          <code className="mx-1 rounded bg-amber-100 px-1">load_coverage … --verified</code> command before formal testing.
+        <Alert
+          tone="amber"
+          icon={<TriangleAlert className="size-5" />}
+          title={c.is_placeholder ? 'Development placeholder boundary' : 'Boundary not verified'}
+        >
+          Replace it with the official Kidapawan City boundary (e.g. PSA/NAMRIA admin level 3 from HDX) using
+          the backend
+          <code className="mx-1 rounded bg-amber-100 px-1">load_coverage … --verified</code> command before
+          formal testing.
         </Alert>
       ) : (
         <Alert tone="green" icon={<CheckCircle2 className="size-5" />} title="Verified official boundary" />

@@ -69,9 +69,18 @@ export function UsersPage() {
 
   return (
     <div>
-      <PageHeader title="Users" description="Customers, technicians and administrators. Deactivated users cannot log in and technicians stop appearing in recommendations." />
+      <PageHeader
+        title="Users"
+        description="Customers, technicians and administrators. Deactivated users cannot log in and technicians stop appearing in recommendations."
+      />
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_180px_180px]">
-        <Input label="Search" type="search" placeholder="Name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input
+          label="Search"
+          type="search"
+          placeholder="Name or email"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <Select
           label="Role"
           value={role ?? ''}
@@ -95,7 +104,11 @@ export function UsersPage() {
       ) : q.isError ? (
         <ErrorState message={errorMessage(q.error)} onRetry={() => q.refetch()} />
       ) : !q.data?.results.length ? (
-        <EmptyState icon={<Users className="size-6" />} title="No users found" description="Try another filter." />
+        <EmptyState
+          icon={<Users className="size-6" />}
+          title="No users found"
+          description="Try another filter."
+        />
       ) : (
         <>
           <Table caption="Users">
@@ -119,12 +132,18 @@ export function UsersPage() {
                   <Td>{ROLE_LABEL[u.role]}</Td>
                   <Td className="hidden md:table-cell">{u.phone || '—'}</Td>
                   <Td className="hidden md:table-cell">{u.date_joined ? formatDate(u.date_joined) : '—'}</Td>
-                  <Td>{u.is_active ? <Badge tone="green">Active</Badge> : <Badge tone="gray">Inactive</Badge>}</Td>
+                  <Td>
+                    {u.is_active ? <Badge tone="green">Active</Badge> : <Badge tone="gray">Inactive</Badge>}
+                  </Td>
                   <Td className="text-right">
                     {u.id === me?.id ? (
                       <span className="text-xs text-slate-400">You</span>
                     ) : (
-                      <Button size="sm" variant={u.is_active ? 'outline' : 'secondary'} onClick={() => setTarget(u)}>
+                      <Button
+                        size="sm"
+                        variant={u.is_active ? 'outline' : 'secondary'}
+                        onClick={() => setTarget(u)}
+                      >
                         {u.is_active ? 'Deactivate' : 'Activate'}
                       </Button>
                     )}
@@ -133,12 +152,21 @@ export function UsersPage() {
               ))}
             </TBody>
           </Table>
-          <Pagination page={page} count={q.data.count} hasNext={!!q.data.next} onChange={(p) => setParam('page', String(p))} />
+          <Pagination
+            page={page}
+            count={q.data.count}
+            hasNext={!!q.data.next}
+            onChange={(p) => setParam('page', String(p))}
+          />
         </>
       )}
       <ConfirmDialog
         open={!!target}
-        title={target?.is_active ? `Deactivate ${target?.full_name || target?.email}?` : `Activate ${target?.full_name || target?.email}?`}
+        title={
+          target?.is_active
+            ? `Deactivate ${target?.full_name || target?.email}?`
+            : `Activate ${target?.full_name || target?.email}?`
+        }
         description={
           target?.is_active
             ? 'They will not be able to log in. A deactivated technician is excluded from recommendations.'

@@ -60,7 +60,10 @@ export function ScoreBreakdown({
         </span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-700">
           {open ? 'Hide' : 'Why this score?'}
-          <ChevronDown className={cn('size-4 transition-transform', open && 'rotate-180')} aria-hidden="true" />
+          <ChevronDown
+            className={cn('size-4 transition-transform', open && 'rotate-180')}
+            aria-hidden="true"
+          />
         </span>
       </button>
       {open && (
@@ -81,7 +84,9 @@ export function ScoreBreakdown({
                 ? `Rating = (${ratingAvg.toFixed(2)} − 1) ÷ 4 = ${formatScore(parts.rating_score)}`
                 : `Rating = ${formatScore(parts.rating_score)}`}
           </p>
-          <p className="text-slate-500">Credential verification is shown separately and does not affect the score.</p>
+          <p className="text-slate-500">
+            Credential verification is shown separately and does not affect the score.
+          </p>
         </div>
       )}
     </div>

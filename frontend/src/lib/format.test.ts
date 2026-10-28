@@ -71,8 +71,12 @@ describe('Asia/Manila time', () => {
 
   it('formats ranges', () => {
     expect(formatTimeRange('2026-11-03T09:00:00+08:00', '2026-11-03T11:00:00+08:00')).toBe('9:00–11:00 AM');
-    expect(formatTimeRange('2026-11-03T11:00:00+08:00', '2026-11-03T13:00:00+08:00')).toBe('11:00 AM–1:00 PM');
-    expect(formatRange('2026-11-03T09:00:00+08:00', '2026-11-03T11:00:00+08:00')).toBe('Tue, Nov 3 · 9:00–11:00 AM');
+    expect(formatTimeRange('2026-11-03T11:00:00+08:00', '2026-11-03T13:00:00+08:00')).toBe(
+      '11:00 AM–1:00 PM',
+    );
+    expect(formatRange('2026-11-03T09:00:00+08:00', '2026-11-03T11:00:00+08:00')).toBe(
+      'Tue, Nov 3 · 9:00–11:00 AM',
+    );
   });
 
   it('computes Manila calendar dates', () => {

@@ -2,7 +2,19 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useParams } from 'react-router';
-import { ArrowLeft, Check, CheckCircle2, ClipboardList, Copy, KeyRound, Mail, MapPin, Phone, Plus, XCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  Check,
+  CheckCircle2,
+  ClipboardList,
+  Copy,
+  KeyRound,
+  Mail,
+  MapPin,
+  Phone,
+  Plus,
+  XCircle,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useAddVerification,
@@ -62,7 +74,10 @@ export function ApplicationDetailPage() {
 
   return (
     <div className="space-y-5">
-      <Link to="/a/applications" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900">
+      <Link
+        to="/a/applications"
+        className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
+      >
         <ArrowLeft className="size-4" /> Applications
       </Link>
       <PageHeader
@@ -98,7 +113,10 @@ export function ApplicationDetailPage() {
                 onClick={() =>
                   update.mutate(
                     { id: a.id, body: { status: 'under_review' } },
-                    { onSuccess: () => toast.success('Marked as under review.'), onError: (e) => toast.error(errorMessage(e)) },
+                    {
+                      onSuccess: () => toast.success('Marked as under review.'),
+                      onError: (e) => toast.error(errorMessage(e)),
+                    },
                   )
                 }
               >
@@ -110,7 +128,11 @@ export function ApplicationDetailPage() {
                 <Button icon={<Check className="size-4" />} onClick={() => setDialog('approve')}>
                   Approve
                 </Button>
-                <Button variant="danger" icon={<XCircle className="size-4" />} onClick={() => setDialog('reject')}>
+                <Button
+                  variant="danger"
+                  icon={<XCircle className="size-4" />}
+                  onClick={() => setDialog('reject')}
+                >
                   Reject
                 </Button>
               </>
@@ -121,7 +143,11 @@ export function ApplicationDetailPage() {
               </Button>
             )}
             {a.status !== 'rejected' && (
-              <Button variant="secondary" icon={<Plus className="size-4" />} onClick={() => setShowVerify(true)}>
+              <Button
+                variant="secondary"
+                icon={<Plus className="size-4" />}
+                onClick={() => setShowVerify(true)}
+              >
                 Add verification record
               </Button>
             )}
@@ -133,9 +159,15 @@ export function ApplicationDetailPage() {
         <Card>
           <CardHeader title="Contact information" />
           <CardBody className="space-y-2 text-sm">
-            <p className="flex items-center gap-2"><Mail className="size-4 text-slate-400" /> {a.email}</p>
-            <p className="flex items-center gap-2"><Phone className="size-4 text-slate-400" /> {a.phone || '—'}</p>
-            <p className="flex items-center gap-2"><MapPin className="size-4 text-slate-400" /> {a.address || '—'}</p>
+            <p className="flex items-center gap-2">
+              <Mail className="size-4 text-slate-400" /> {a.email}
+            </p>
+            <p className="flex items-center gap-2">
+              <Phone className="size-4 text-slate-400" /> {a.phone || '—'}
+            </p>
+            <p className="flex items-center gap-2">
+              <MapPin className="size-4 text-slate-400" /> {a.address || '—'}
+            </p>
             <p className="pt-2">
               <span className="font-medium">Requested categories:</span>{' '}
               {a.requested_categories.map((c) => c.name).join(', ') || '—'}
@@ -153,7 +185,10 @@ export function ApplicationDetailPage() {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title="Credential verification records" description="Shown to customers separately; never affects the score." />
+          <CardHeader
+            title="Credential verification records"
+            description="Shown to customers separately; never affects the score."
+          />
           <CardBody>
             {a.verifications.length ? (
               <ul className="space-y-3">
@@ -211,7 +246,9 @@ export function ApplicationDetailPage() {
         loading={reject.isPending}
         error={dialogError}
         onClose={close}
-        onConfirm={(reason) => void run(() => reject.mutateAsync({ id: a.id, reason }), 'Application rejected.')}
+        onConfirm={(reason) =>
+          void run(() => reject.mutateAsync({ id: a.id, reason }), 'Application rejected.')
+        }
       />
       <ConfirmDialog
         open={dialog === 'account'}
@@ -246,7 +283,13 @@ function VerificationModal({ applicationId, onClose }: { applicationId: number; 
     formState: { errors, isSubmitting },
   } = useForm<VerificationValues>({
     resolver: zodResolver(verificationSchema),
-    defaultValues: { credential_type: '', method: undefined, outcome: undefined, checked_on: manilaDateString(), notes: '' },
+    defaultValues: {
+      credential_type: '',
+      method: undefined,
+      outcome: undefined,
+      checked_on: manilaDateString(),
+      notes: '',
+    },
   });
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
@@ -276,7 +319,13 @@ function VerificationModal({ applicationId, onClose }: { applicationId: number; 
       }
     >
       <form id="verify-form" onSubmit={onSubmit} className="space-y-4" noValidate>
-        <Input label="Credential type" required placeholder="e.g. TESDA NC II – Electrical Installation" error={errors.credential_type?.message} {...register('credential_type')} />
+        <Input
+          label="Credential type"
+          required
+          placeholder="e.g. TESDA NC II – Electrical Installation"
+          error={errors.credential_type?.message}
+          {...register('credential_type')}
+        />
         <Select
           label="Verification method"
           required
@@ -293,8 +342,20 @@ function VerificationModal({ applicationId, onClose }: { applicationId: number; 
           error={errors.outcome?.message}
           {...register('outcome')}
         />
-        <Input label="Date checked" type="date" required max={manilaDateString()} error={errors.checked_on?.message} {...register('checked_on')} />
-        <Textarea label="Notes" placeholder="Certificate number, who confirmed, etc." error={errors.notes?.message} {...register('notes')} />
+        <Input
+          label="Date checked"
+          type="date"
+          required
+          max={manilaDateString()}
+          error={errors.checked_on?.message}
+          {...register('checked_on')}
+        />
+        <Textarea
+          label="Notes"
+          placeholder="Certificate number, who confirmed, etc."
+          error={errors.notes?.message}
+          {...register('notes')}
+        />
         <FormError message={formError} />
       </form>
     </Modal>
@@ -323,10 +384,18 @@ function ActivationCodeModal({ account, onClose }: { account: CreateAccountRespo
     >
       <div className="space-y-4">
         <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-brand-300 bg-brand-50 p-5">
-          <code className="font-mono text-3xl font-bold tracking-[0.2em] text-brand-900 select-all" aria-label="Activation code">
+          <code
+            className="font-mono text-3xl font-bold tracking-[0.2em] text-brand-900 select-all"
+            aria-label="Activation code"
+          >
             {account.activation_code}
           </code>
-          <Button variant="outline" size="sm" icon={copied ? <Check className="size-4" /> : <Copy className="size-4" />} onClick={() => void copy()}>
+          <Button
+            variant="outline"
+            size="sm"
+            icon={copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+            onClick={() => void copy()}
+          >
             {copied ? 'Copied' : 'Copy code'}
           </Button>
         </div>
@@ -343,10 +412,15 @@ function ActivationCodeModal({ account, onClose }: { account: CreateAccountRespo
         <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
           <p className="font-semibold">Instructions for the technician</p>
           <ol className="mt-1 list-decimal space-y-0.5 pl-5">
-            <li>Open the platform and go to <strong>Activate</strong> ({window.location.origin}/activate).</li>
+            <li>
+              Open the platform and go to <strong>Activate</strong> ({window.location.origin}/activate).
+            </li>
             <li>Enter the email above and this activation code.</li>
             <li>Choose a password, then log in.</li>
-            <li>Complete the profile (location, specializations) and add availability to appear in recommendations.</li>
+            <li>
+              Complete the profile (location, specializations) and add availability to appear in
+              recommendations.
+            </li>
           </ol>
         </div>
       </div>

@@ -3,10 +3,22 @@ import { Star } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 /** Read-only stars, supports fractional averages. */
-export function RatingStars({ value, size = 'sm', className }: { value: number; size?: 'sm' | 'md'; className?: string }) {
+export function RatingStars({
+  value,
+  size = 'sm',
+  className,
+}: {
+  value: number;
+  size?: 'sm' | 'md';
+  className?: string;
+}) {
   const dim = size === 'md' ? 'size-5' : 'size-4';
   return (
-    <span className={cn('inline-flex items-center', className)} aria-label={`${value.toFixed(1)} out of 5 stars`} role="img">
+    <span
+      className={cn('inline-flex items-center', className)}
+      aria-label={`${value.toFixed(1)} out of 5 stars`}
+      role="img"
+    >
       {[1, 2, 3, 4, 5].map((i) => {
         const fill = Math.max(0, Math.min(1, value - (i - 1)));
         return (

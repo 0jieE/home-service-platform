@@ -13,7 +13,9 @@ export function RouteError() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-4 px-6 text-center">
       <h1 className="text-2xl font-bold">Something went wrong</h1>
-      <p className="text-sm text-slate-600">{chunk ? 'A new version may be available. Reload the page.' : message}</p>
+      <p className="text-sm text-slate-600">
+        {chunk ? 'A new version may be available. Reload the page.' : message}
+      </p>
       <div className="flex gap-2">
         <button type="button" className={buttonClasses('primary')} onClick={() => window.location.reload()}>
           Reload

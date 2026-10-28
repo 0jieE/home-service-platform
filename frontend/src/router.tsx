@@ -42,8 +42,14 @@ export const router = createBrowserRouter([
             ),
             children: [
               { path: '/login', element: page(() => import('@/features/auth/LoginPage'), 'LoginPage') },
-              { path: '/register', element: page(() => import('@/features/auth/RegisterPage'), 'RegisterPage') },
-              { path: '/activate', element: page(() => import('@/features/auth/ActivatePage'), 'ActivatePage') },
+              {
+                path: '/register',
+                element: page(() => import('@/features/auth/RegisterPage'), 'RegisterPage'),
+              },
+              {
+                path: '/activate',
+                element: page(() => import('@/features/auth/ActivatePage'), 'ActivatePage'),
+              },
             ],
           },
         ],
@@ -62,13 +68,22 @@ export const router = createBrowserRouter([
             path: 'technicians/:id',
             element: page(() => import('@/features/customer/TechnicianDetailPage'), 'TechnicianDetailPage'),
           },
-          { path: 'book/:technicianId', element: page(() => import('@/features/customer/BookPage'), 'BookPage') },
-          { path: 'bookings', element: page(() => import('@/features/customer/BookingsPage'), 'BookingsPage') },
+          {
+            path: 'book/:technicianId',
+            element: page(() => import('@/features/customer/BookPage'), 'BookPage'),
+          },
+          {
+            path: 'bookings',
+            element: page(() => import('@/features/customer/BookingsPage'), 'BookingsPage'),
+          },
           {
             path: 'bookings/:id',
             element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage'),
           },
-          { path: 'profile', element: page(() => import('@/features/customer/ProfilePage'), 'CustomerProfilePage') },
+          {
+            path: 'profile',
+            element: page(() => import('@/features/customer/ProfilePage'), 'CustomerProfilePage'),
+          },
         ],
       },
       {
@@ -80,9 +95,15 @@ export const router = createBrowserRouter([
             path: 'dashboard',
             element: page(() => import('@/features/technician/DashboardPage'), 'TechnicianDashboardPage'),
           },
-          { path: 'requests', element: page(() => import('@/features/technician/RequestsPage'), 'RequestsPage') },
+          {
+            path: 'requests',
+            element: page(() => import('@/features/technician/RequestsPage'), 'RequestsPage'),
+          },
           { path: 'jobs', element: page(() => import('@/features/technician/JobsPage'), 'JobsPage') },
-          { path: 'jobs/:id', element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage') },
+          {
+            path: 'jobs/:id',
+            element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage'),
+          },
           {
             path: 'availability',
             element: page(() => import('@/features/technician/AvailabilityPage'), 'AvailabilityPage'),
@@ -98,7 +119,10 @@ export const router = createBrowserRouter([
         element: roleShell('admin'),
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
-          { path: 'dashboard', element: page(() => import('@/features/admin/DashboardPage'), 'AdminDashboardPage') },
+          {
+            path: 'dashboard',
+            element: page(() => import('@/features/admin/DashboardPage'), 'AdminDashboardPage'),
+          },
           {
             path: 'applications',
             element: page(() => import('@/features/admin/ApplicationsPage'), 'ApplicationsPage'),
@@ -108,9 +132,15 @@ export const router = createBrowserRouter([
             element: page(() => import('@/features/admin/ApplicationDetailPage'), 'ApplicationDetailPage'),
           },
           { path: 'users', element: page(() => import('@/features/admin/UsersPage'), 'UsersPage') },
-          { path: 'categories', element: page(() => import('@/features/admin/CategoriesPage'), 'CategoriesPage') },
+          {
+            path: 'categories',
+            element: page(() => import('@/features/admin/CategoriesPage'), 'CategoriesPage'),
+          },
           { path: 'disputes', element: page(() => import('@/features/admin/DisputesPage'), 'DisputesPage') },
-          { path: 'bookings/:id', element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage') },
+          {
+            path: 'bookings/:id',
+            element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage'),
+          },
           { path: 'settings', element: page(() => import('@/features/admin/SettingsPage'), 'SettingsPage') },
           { path: 'coverage', element: page(() => import('@/features/admin/CoveragePage'), 'CoveragePage') },
         ],

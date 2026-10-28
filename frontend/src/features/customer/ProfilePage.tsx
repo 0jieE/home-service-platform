@@ -4,7 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocation } from 'react-router';
 import { toast } from 'sonner';
 import { useCustomerMe, useUpdateCustomerMe, useUpdateMe } from '@/api/auth';
-import { LocationPicker, OUTSIDE_COVERAGE_MESSAGE, type CoverageStatus } from '@/components/map/LocationPicker';
+import {
+  LocationPicker,
+  OUTSIDE_COVERAGE_MESSAGE,
+  type CoverageStatus,
+} from '@/components/map/LocationPicker';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/EmptyState';
@@ -52,7 +56,8 @@ export function CustomerProfilePage() {
   }, [profile.data, user, reset]);
 
   if (profile.isLoading) return <FullPageSpinner />;
-  if (profile.isError) return <ErrorState message={errorMessage(profile.error)} onRetry={() => profile.refetch()} />;
+  if (profile.isError)
+    return <ErrorState message={errorMessage(profile.error)} onRetry={() => profile.refetch()} />;
 
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
@@ -90,9 +95,25 @@ export function CustomerProfilePage() {
         <CardBody>
           <form onSubmit={onSubmit} className="space-y-5" noValidate>
             <div className="grid gap-4 sm:grid-cols-3">
-              <Input label="First name" required error={errors.first_name?.message} {...register('first_name')} />
-              <Input label="Last name" required error={errors.last_name?.message} {...register('last_name')} />
-              <Input label="Mobile number" type="tel" required error={errors.phone?.message} {...register('phone')} />
+              <Input
+                label="First name"
+                required
+                error={errors.first_name?.message}
+                {...register('first_name')}
+              />
+              <Input
+                label="Last name"
+                required
+                error={errors.last_name?.message}
+                {...register('last_name')}
+              />
+              <Input
+                label="Mobile number"
+                type="tel"
+                required
+                error={errors.phone?.message}
+                {...register('phone')}
+              />
             </div>
             <LocationPicker
               label="Default service location"
@@ -108,7 +129,11 @@ export function CustomerProfilePage() {
             />
             <FormError message={formError} />
             <div className="flex flex-wrap gap-2">
-              <Button type="submit" loading={isSubmitting} disabled={!isDirty || (!!loc && coverage === 'outside')}>
+              <Button
+                type="submit"
+                loading={isSubmitting}
+                disabled={!isDirty || (!!loc && coverage === 'outside')}
+              >
                 Save profile
               </Button>
               {loc && (

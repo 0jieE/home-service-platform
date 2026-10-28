@@ -126,8 +126,13 @@ export function useCreateApplication() {
 export function useUpdateApplication() {
   const invalidate = useInvalidateApplications();
   return useMutation({
-    mutationFn: ({ id, body }: { id: number; body: Partial<ApplicationBody> & { status?: 'under_review' } }) =>
-      updateApplication(id, body),
+    mutationFn: ({
+      id,
+      body,
+    }: {
+      id: number;
+      body: Partial<ApplicationBody> & { status?: 'under_review' };
+    }) => updateApplication(id, body),
     onSuccess: (_d, v) => invalidate(v.id),
   });
 }

@@ -16,7 +16,9 @@ export function AvailabilityStrip({
 }) {
   const dates = Array.from({ length: days }, (_, i) => manilaDateString(i));
   const byDay = (list: TimeRange[] | AvailabilitySlot[], d: string) =>
-    (list as TimeRange[]).filter((s) => manilaDateOf(s.start) === d).sort((a, b) => a.start.localeCompare(b.start));
+    (list as TimeRange[])
+      .filter((s) => manilaDateOf(s.start) === d)
+      .sort((a, b) => a.start.localeCompare(b.start));
 
   return (
     <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
@@ -38,7 +40,9 @@ export function AvailabilityStrip({
                 Tag === 'button' && 'hover:border-emerald-400 focus-visible:outline-2',
               )}
             >
-              <span className="block font-semibold text-slate-700">{formatDate(`${d}T12:00:00+08:00`, 'EEE, MMM d')}</span>
+              <span className="block font-semibold text-slate-700">
+                {formatDate(`${d}T12:00:00+08:00`, 'EEE, MMM d')}
+              </span>
               {has ? (
                 free.map((s, i) => (
                   <span key={i} className="mt-1 block text-emerald-800">

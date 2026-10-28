@@ -37,7 +37,10 @@ export function DisputesPage() {
     <div>
       <PageHeader title="Disputes" description="Customers open a dispute instead of confirming completion." />
       <Instructions title="Resolving a dispute">
-        <p>Review the booking history and contact both parties. Then record a decision and notes — the decision and your notes are kept with the booking’s history.</p>
+        <p>
+          Review the booking history and contact both parties. Then record a decision and notes — the decision
+          and your notes are kept with the booking’s history.
+        </p>
       </Instructions>
       <Tabs
         className="mb-4"
@@ -53,7 +56,10 @@ export function DisputesPage() {
       ) : q.isError ? (
         <ErrorState message={errorMessage(q.error)} onRetry={() => q.refetch()} />
       ) : !q.data?.results.length ? (
-        <EmptyState icon={<Scale className="size-6" />} title={status === 'open' ? 'No open disputes' : 'No resolved disputes'} />
+        <EmptyState
+          icon={<Scale className="size-6" />}
+          title={status === 'open' ? 'No open disputes' : 'No resolved disputes'}
+        />
       ) : (
         <>
           <ul className="space-y-3">
@@ -65,7 +71,8 @@ export function DisputesPage() {
                       Dispute #{d.id} · opened {formatDateTime(d.created_at)} by {d.opened_by_name}
                     </p>
                     <h2 className="font-semibold">
-                      {d.booking.category.name}: {d.booking.customer.full_name} vs. {d.booking.technician.full_name}
+                      {d.booking.category.name}: {d.booking.customer.full_name} vs.{' '}
+                      {d.booking.technician.full_name}
                     </h2>
                     <p className="text-sm text-slate-600">{formatRange(d.booking.start, d.booking.end)}</p>
                   </div>
@@ -79,13 +86,18 @@ export function DisputesPage() {
                     <p>
                       <span className="font-medium">Decision:</span>{' '}
                       <Badge tone="gray">{d.decision ? DECISION_LABEL[d.decision] : '—'}</Badge>{' '}
-                      {d.resolved_at && <span className="text-slate-500">({formatDateTime(d.resolved_at)})</span>}
+                      {d.resolved_at && (
+                        <span className="text-slate-500">({formatDateTime(d.resolved_at)})</span>
+                      )}
                     </p>
                     {d.admin_notes && <p className="mt-1">{d.admin_notes}</p>}
                   </div>
                 )}
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Link to={`/a/bookings/${d.booking.id}`} className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-brand-700 hover:bg-brand-50">
+                  <Link
+                    to={`/a/bookings/${d.booking.id}`}
+                    className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-brand-700 hover:bg-brand-50"
+                  >
                     View booking #{d.booking.id}
                   </Link>
                   {d.status === 'open' && <Button onClick={() => setResolving(d)}>Resolve</Button>}
@@ -93,7 +105,12 @@ export function DisputesPage() {
               </li>
             ))}
           </ul>
-          <Pagination page={page} count={q.data.count} hasNext={!!q.data.next} onChange={(p) => setSp({ status, page: String(p) })} />
+          <Pagination
+            page={page}
+            count={q.data.count}
+            hasNext={!!q.data.next}
+            onChange={(p) => setSp({ status, page: String(p) })}
+          />
         </>
       )}
       {resolving && <ResolveModal dispute={resolving} onClose={() => setResolving(null)} />}
@@ -109,7 +126,10 @@ function ResolveModal({ dispute, onClose }: { dispute: AdminDispute; onClose: ()
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<ResolveDisputeValues>({ resolver: zodResolver(resolveDisputeSchema), defaultValues: { decision: undefined, admin_notes: '' } });
+  } = useForm<ResolveDisputeValues>({
+    resolver: zodResolver(resolveDisputeSchema),
+    defaultValues: { decision: undefined, admin_notes: '' },
+  });
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
     try {
@@ -149,7 +169,14 @@ function ResolveModal({ dispute, onClose }: { dispute: AdminDispute; onClose: ()
           error={errors.decision?.message}
           {...register('decision')}
         />
-        <Textarea label="Administrator notes" required rows={4} placeholder="What you found and why you decided this" error={errors.admin_notes?.message} {...register('admin_notes')} />
+        <Textarea
+          label="Administrator notes"
+          required
+          rows={4}
+          placeholder="What you found and why you decided this"
+          error={errors.admin_notes?.message}
+          {...register('admin_notes')}
+        />
         <FormError message={formError} />
       </form>
     </Modal>

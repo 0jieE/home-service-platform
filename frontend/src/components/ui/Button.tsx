@@ -25,7 +25,11 @@ const sizes: Record<ButtonSize, string> = {
   lg: 'min-h-12 px-5 text-base',
 };
 
-export function buttonClasses(variant: ButtonVariant = 'primary', size: ButtonSize = 'md', className?: string) {
+export function buttonClasses(
+  variant: ButtonVariant = 'primary',
+  size: ButtonSize = 'md',
+  className?: string,
+) {
   return cn(base, variants[variant], sizes[size], className);
 }
 
@@ -37,7 +41,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading, icon, className, children, disabled, type = 'button', ...rest },
+  {
+    variant = 'primary',
+    size = 'md',
+    loading,
+    icon,
+    className,
+    children,
+    disabled,
+    type = 'button',
+    ...rest
+  },
   ref,
 ) {
   return (

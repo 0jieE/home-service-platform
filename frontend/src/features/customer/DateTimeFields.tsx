@@ -2,7 +2,14 @@ import { useMemo } from 'react';
 import { Clock } from 'lucide-react';
 import { useConfigValues } from '@/api/config';
 import { Input, Select } from '@/components/ui/Field';
-import { addMinutesIso, formatTime, manilaDateString, manilaIso, timeOptions, timeToMinutes } from '@/lib/format';
+import {
+  addMinutesIso,
+  formatTime,
+  manilaDateString,
+  manilaIso,
+  timeOptions,
+  timeToMinutes,
+} from '@/lib/format';
 import { formatInTimeZone } from 'date-fns-tz';
 import { TIMEZONE } from '@/lib/env';
 
@@ -25,14 +32,17 @@ export function DateTimeFields({
   const { stepMinutes, blockMinutes } = useConfigValues();
   const today = manilaDateString();
   const options = useMemo(() => {
-    const all = timeOptions(stepMinutes, 6, 21);
+    const all = timeOptions(stepMinutes, 0, 24);
     if (date !== today) return all;
     const nowMin = timeToMinutes(formatInTimeZone(new Date(), TIMEZONE, 'HH:mm'));
     return all.map((o) => ({ ...o, disabled: timeToMinutes(o.value) <= nowMin }));
   }, [stepMinutes, date, today]);
 
   const end = date && time ? formatTime(addMinutesIso(manilaIso(date, time), blockMinutes)) : null;
-  const hours = blockMinutes % 60 === 0 ? `${blockMinutes / 60} hour${blockMinutes === 60 ? '' : 's'}` : `${blockMinutes} minutes`;
+  const hours =
+    blockMinutes % 60 === 0
+      ? `${blockMinutes / 60} hour${blockMinutes === 60 ? '' : 's'}`
+      : `${blockMinutes} minutes`;
 
   return (
     <div className="space-y-2">
@@ -61,7 +71,8 @@ export function DateTimeFields({
         <Clock className="size-4 text-slate-400" aria-hidden="true" />
         {end ? (
           <span>
-            Appointment block: {hours} — ends at <strong className="text-slate-800">{end}</strong> (Philippine time)
+            Appointment block: {hours} — ends at <strong className="text-slate-800">{end}</strong> (Philippine
+            time)
           </span>
         ) : (
           <span>Each appointment is a {hours} block.</span>

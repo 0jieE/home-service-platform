@@ -41,7 +41,9 @@ export async function getMe(): Promise<User> {
   return data;
 }
 
-export async function updateMe(body: Partial<Pick<User, 'first_name' | 'last_name' | 'phone'>>): Promise<User> {
+export async function updateMe(
+  body: Partial<Pick<User, 'first_name' | 'last_name' | 'phone'>>,
+): Promise<User> {
   const { data } = await api.patch<User>('/auth/me/', body);
   return data;
 }

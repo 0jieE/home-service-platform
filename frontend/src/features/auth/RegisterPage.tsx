@@ -25,7 +25,14 @@ export function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { first_name: '', last_name: '', email: '', phone: '', password: '', confirm_password: '' },
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirm_password: '',
+    },
   });
 
   const onSubmit = handleSubmit(async ({ confirm_password: _c, ...body }) => {
@@ -60,10 +67,29 @@ export function RegisterPage() {
     >
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="First name" autoComplete="given-name" required error={errors.first_name?.message} {...register('first_name')} />
-          <Input label="Last name" autoComplete="family-name" required error={errors.last_name?.message} {...register('last_name')} />
+          <Input
+            label="First name"
+            autoComplete="given-name"
+            required
+            error={errors.first_name?.message}
+            {...register('first_name')}
+          />
+          <Input
+            label="Last name"
+            autoComplete="family-name"
+            required
+            error={errors.last_name?.message}
+            {...register('last_name')}
+          />
         </div>
-        <Input label="Email" type="email" autoComplete="email" required error={errors.email?.message} {...register('email')} />
+        <Input
+          label="Email"
+          type="email"
+          autoComplete="email"
+          required
+          error={errors.email?.message}
+          {...register('email')}
+        />
         <Input
           label="Mobile number"
           type="tel"

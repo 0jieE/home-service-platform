@@ -11,7 +11,15 @@ import { applyApiErrors } from '@/lib/errors';
 import { reviewSchema, type ReviewValues } from '@/types/schemas';
 import type { Booking } from '@/types/api';
 
-export function ReviewDialog({ booking, open, onClose }: { booking: Booking; open: boolean; onClose: () => void }) {
+export function ReviewDialog({
+  booking,
+  open,
+  onClose,
+}: {
+  booking: Booking;
+  open: boolean;
+  onClose: () => void;
+}) {
   const mutation = useCreateReview();
   const [formError, setFormError] = useState<string | null>(null);
   const {
@@ -20,7 +28,10 @@ export function ReviewDialog({ booking, open, onClose }: { booking: Booking; ope
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<ReviewValues>({ resolver: zodResolver(reviewSchema), defaultValues: { rating: 0, comment: '' } });
+  } = useForm<ReviewValues>({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: { rating: 0, comment: '' },
+  });
 
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);

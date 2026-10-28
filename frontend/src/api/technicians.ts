@@ -50,9 +50,12 @@ function normalizeAvailability(data: TechnicianAvailability | AvailabilitySlot[]
 }
 
 export async function getTechnicianAvailability(id: number, from?: string, to?: string) {
-  const { data } = await api.get<TechnicianAvailability | AvailabilitySlot[]>(`/technicians/${id}/availability/`, {
-    params: { from, to },
-  });
+  const { data } = await api.get<TechnicianAvailability | AvailabilitySlot[]>(
+    `/technicians/${id}/availability/`,
+    {
+      params: { from, to },
+    },
+  );
   return normalizeAvailability(data);
 }
 
@@ -159,8 +162,11 @@ export interface GenerateBody {
   to: string;
 }
 
-export async function generateSchedule(body: GenerateBody): Promise<{ created: number }> {
-  const { data } = await api.post<{ created: number }>('/technicians/me/availability/generate/', body);
+export async function generateSchedule(body: GenerateBody): Promise<{ created: number; skipped?: number }> {
+  const { data } = await api.post<{ created: number; skipped?: number }>(
+    '/technicians/me/availability/generate/',
+    body,
+  );
   return data;
 }
 

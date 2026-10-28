@@ -28,7 +28,12 @@ interface ActionConfig {
   confirmLabel: string;
   success: string;
   /** reason textarea; `required` may depend on the booking state. */
-  reason?: { label: string; required: (b: Booking) => boolean; bodyKey: 'reason' | 'notes'; placeholder?: string };
+  reason?: {
+    label: string;
+    required: (b: Booking) => boolean;
+    bodyKey: 'reason' | 'notes';
+    placeholder?: string;
+  };
 }
 
 const validateRequired = (v: string) => {
@@ -52,10 +57,16 @@ export const ACTION_CONFIG: Record<BookingAction, ActionConfig> = {
     icon: XCircle,
     variant: 'outline',
     title: 'Decline this request?',
-    description: (b) => `${b.customer.full_name} will be told you can't take this job and can book someone else.`,
+    description: (b) =>
+      `${b.customer.full_name} will be told you can't take this job and can book someone else.`,
     confirmLabel: 'Decline request',
     success: 'Request declined.',
-    reason: { label: 'Reason (optional)', required: () => false, bodyKey: 'reason', placeholder: 'e.g. Fully booked that day' },
+    reason: {
+      label: 'Reason (optional)',
+      required: () => false,
+      bodyKey: 'reason',
+      placeholder: 'e.g. Fully booked that day',
+    },
   },
   cancel: {
     label: 'Cancel booking',
@@ -92,14 +103,20 @@ export const ACTION_CONFIG: Record<BookingAction, ActionConfig> = {
     description: (b) => `${b.customer.full_name} will be asked to confirm that the work is done.`,
     confirmLabel: 'Send request',
     success: 'Completion confirmation requested from the customer.',
-    reason: { label: 'Notes for the customer (optional)', required: () => false, bodyKey: 'notes', placeholder: 'e.g. Replaced the faucet washer' },
+    reason: {
+      label: 'Notes for the customer (optional)',
+      required: () => false,
+      bodyKey: 'notes',
+      placeholder: 'e.g. Replaced the faucet washer',
+    },
   },
   confirm_completion: {
     label: 'Confirm job completed',
     icon: CheckCheck,
     variant: 'primary',
     title: 'Confirm the job is completed?',
-    description: (b) => `Confirm only if ${b.technician.full_name} finished the work. You can then leave a review.`,
+    description: (b) =>
+      `Confirm only if ${b.technician.full_name} finished the work. You can then leave a review.`,
     confirmLabel: 'Yes, it is completed',
     success: 'Thanks! The job is marked completed. You can now leave a review.',
   },
@@ -112,7 +129,12 @@ export const ACTION_CONFIG: Record<BookingAction, ActionConfig> = {
       'Use this if the work is not finished or there is a problem. An administrator will review it and record a decision.',
     confirmLabel: 'Open dispute',
     success: 'Dispute opened. An administrator will review it.',
-    reason: { label: 'What is the problem?', required: () => true, bodyKey: 'reason', placeholder: 'Describe what is wrong' },
+    reason: {
+      label: 'What is the problem?',
+      required: () => true,
+      bodyKey: 'reason',
+      placeholder: 'Describe what is wrong',
+    },
   },
   review: {
     label: 'Write a review',
@@ -205,7 +227,9 @@ export function ActionBar({ booking, className }: { booking: Booking; className?
             title={cfg.title}
             description={cfg.description(booking)}
             confirmLabel={cfg.confirmLabel}
-            tone={cfg.variant === 'danger' || current === 'cancel' || current === 'decline' ? 'danger' : 'primary'}
+            tone={
+              cfg.variant === 'danger' || current === 'cancel' || current === 'decline' ? 'danger' : 'primary'
+            }
             loading={mutation.isPending}
             error={error}
             reason={

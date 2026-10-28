@@ -16,7 +16,15 @@ export function PanTo({ target, zoom }: { target: Point | null | undefined; zoom
 }
 
 /** Fits the viewport to the given points whenever their set changes. */
-export function FitBounds({ points, padding = 48, maxZoom = 15 }: { points: Point[]; padding?: number; maxZoom?: number }) {
+export function FitBounds({
+  points,
+  padding = 48,
+  maxZoom = 15,
+}: {
+  points: Point[];
+  padding?: number;
+  maxZoom?: number;
+}) {
   const map = useMap();
   const key = points.map((p) => `${p.lat.toFixed(5)},${p.lng.toFixed(5)}`).join('|');
   const lastKey = useRef('');

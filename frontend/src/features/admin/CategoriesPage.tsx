@@ -41,7 +41,11 @@ export function CategoriesPage() {
       ) : q.isError ? (
         <ErrorState message={errorMessage(q.error)} onRetry={() => q.refetch()} />
       ) : !q.data?.length ? (
-        <EmptyState icon={<Tags className="size-6" />} title="No categories" action={<Button onClick={() => setEditing('new')}>Add category</Button>} />
+        <EmptyState
+          icon={<Tags className="size-6" />}
+          title="No categories"
+          action={<Button onClick={() => setEditing('new')}>Add category</Button>}
+        />
       ) : (
         <Table caption="Service categories">
           <THead>
@@ -64,13 +68,25 @@ export function CategoriesPage() {
                     <span className="block text-xs text-slate-500">{c.slug}</span>
                   </Td>
                   <Td className="hidden max-w-sm md:table-cell">{c.description || '—'}</Td>
-                  <Td>{c.is_active ? <Badge tone="green">Active</Badge> : <Badge tone="gray">Inactive</Badge>}</Td>
+                  <Td>
+                    {c.is_active ? <Badge tone="green">Active</Badge> : <Badge tone="gray">Inactive</Badge>}
+                  </Td>
                   <Td className="text-right whitespace-nowrap">
-                    <Button size="sm" variant="ghost" icon={<Pencil className="size-4" />} onClick={() => setEditing(c)}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      icon={<Pencil className="size-4" />}
+                      onClick={() => setEditing(c)}
+                    >
                       Edit
                     </Button>
                     {c.is_active && (
-                      <Button size="sm" variant="ghost" className="text-red-700" onClick={() => setDeleting(c)}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-700"
+                        onClick={() => setDeleting(c)}
+                      >
                         Delete
                       </Button>
                     )}
@@ -81,7 +97,9 @@ export function CategoriesPage() {
           </TBody>
         </Table>
       )}
-      {editing && <CategoryModal category={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />}
+      {editing && (
+        <CategoryModal category={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />
+      )}
       <ConfirmDialog
         open={!!deleting}
         title={`Delete “${deleting?.name}”?`}
@@ -121,7 +139,12 @@ function CategoryModal({ category, onClose }: { category: Category | null; onClo
   } = useForm<CategoryValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: category
-      ? { name: category.name, description: category.description ?? '', icon: category.icon ?? '', is_active: category.is_active }
+      ? {
+          name: category.name,
+          description: category.description ?? '',
+          icon: category.icon ?? '',
+          is_active: category.is_active,
+        }
       : { name: '', description: '', icon: 'wrench', is_active: true },
   });
   const onSubmit = handleSubmit(async (v) => {
@@ -154,8 +177,17 @@ function CategoryModal({ category, onClose }: { category: Category | null; onClo
       <form id="cat-form" onSubmit={onSubmit} className="space-y-4" noValidate>
         <Input label="Name" required error={errors.name?.message} {...register('name')} />
         <Textarea label="Description" error={errors.description?.message} {...register('description')} />
-        <Input label="Icon name" hint="Short icon keyword, e.g. snowflake, zap, droplet, wrench, hammer, laptop, home, flame." error={errors.icon?.message} {...register('icon')} />
-        <Checkbox label="Active" description="Inactive categories don’t appear in searches." {...register('is_active')} />
+        <Input
+          label="Icon name"
+          hint="Short icon keyword, e.g. snowflake, zap, droplet, wrench, hammer, laptop, home, flame."
+          error={errors.icon?.message}
+          {...register('icon')}
+        />
+        <Checkbox
+          label="Active"
+          description="Inactive categories don’t appear in searches."
+          {...register('is_active')}
+        />
         <FormError message={formError} />
       </form>
     </Modal>

@@ -13,7 +13,13 @@ const S = (d: number, r: number | null) => weights.w_p * P(d) + weights.w_r * Q(
 const TABLE = [
   { tech: 'A', d: 1.0, r: 4.0, text: 'Proximity 0.500 × 0.50 + Rating 0.750 × 0.50 = 0.625', score: '0.625' },
   { tech: 'B', d: 3.0, r: 5.0, text: 'Proximity 0.250 × 0.50 + Rating 1.000 × 0.50 = 0.625', score: '0.625' },
-  { tech: 'C', d: 0.5, r: null, text: 'Proximity 0.667 × 0.50 + Rating 0.500 × 0.50 = 0.583', score: '0.583' },
+  {
+    tech: 'C',
+    d: 0.5,
+    r: null,
+    text: 'Proximity 0.667 × 0.50 + Rating 0.500 × 0.50 = 0.583',
+    score: '0.583',
+  },
 ] as const;
 
 describe('ScoreBreakdown reproduces Table 3.3', () => {
@@ -24,7 +30,9 @@ describe('ScoreBreakdown reproduces Table 3.3', () => {
 
   it.each(TABLE)('renders technician $tech score and expandable breakdown', async ({ d, r, text, score }) => {
     const parts = { proximity_score: P(d), rating_score: Q(r), score: S(d, r) };
-    render(<ScoreBreakdown parts={parts} weights={weights} distanceKm={d} hasRatings={r !== null} ratingAvg={r} />);
+    render(
+      <ScoreBreakdown parts={parts} weights={weights} distanceKm={d} hasRatings={r !== null} ratingAvg={r} />,
+    );
     expect(screen.getByTestId('score-value')).toHaveTextContent(score);
     expect(screen.queryByTestId('score-breakdown')).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /why this score/i }));

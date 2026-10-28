@@ -24,7 +24,14 @@ export function bookingEventMessage(event: BookingEvent, booking: Booking, viewe
       return `${tech} declined ${yourReq} for ${when}`;
     case 'cancelled': {
       const by = booking.cancelled_by_role;
-      const who = by === 'customer' ? cust : by === 'technician' ? tech : by === 'admin' ? 'An administrator' : 'The system';
+      const who =
+        by === 'customer'
+          ? cust
+          : by === 'technician'
+            ? tech
+            : by === 'admin'
+              ? 'An administrator'
+              : 'The system';
       const reason = booking.cancellation_reason === 'expired' ? ' (it expired before being accepted)' : '';
       return `${who} cancelled the ${service} booking for ${when}${reason}`;
     }
@@ -43,7 +50,9 @@ export function bookingEventMessage(event: BookingEvent, booking: Booking, viewe
     case 'dispute_resolved':
       return `The administrator resolved the dispute on the ${service} job (${when})`;
     case 'reviewed':
-      return viewer === 'technician' ? `${cust} left a review for ${yourJob}` : `Review posted for the ${service} job`;
+      return viewer === 'technician'
+        ? `${cust} left a review for ${yourJob}`
+        : `Review posted for the ${service} job`;
     default:
       return `Booking #${booking.id} was updated`;
   }

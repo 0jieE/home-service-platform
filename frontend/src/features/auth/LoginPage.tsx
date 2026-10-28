@@ -23,7 +23,10 @@ export function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: '', password: '' } });
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
   const onSubmit = handleSubmit(async ({ email, password }) => {
     setFormError(null);
@@ -60,12 +63,22 @@ export function LoginPage() {
       }
     >
       {notice && (
-        <div role="status" className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+        <div
+          role="status"
+          className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
+        >
           {notice}
         </div>
       )}
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
-        <Input label="Email" type="email" autoComplete="email" required error={errors.email?.message} {...register('email')} />
+        <Input
+          label="Email"
+          type="email"
+          autoComplete="email"
+          required
+          error={errors.email?.message}
+          {...register('email')}
+        />
         <Input
           label="Password"
           type="password"

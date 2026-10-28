@@ -6,7 +6,11 @@ export function Spinner({ size = 'md', className }: { size?: 'sm' | 'md' | 'lg';
     <span
       role="status"
       aria-label="Loading"
-      className={cn('inline-block animate-spin rounded-full border-current border-r-transparent', dims, className)}
+      className={cn(
+        'inline-block animate-spin rounded-full border-current border-r-transparent',
+        dims,
+        className,
+      )}
     />
   );
 }

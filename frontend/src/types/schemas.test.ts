@@ -10,8 +10,10 @@ import {
   reviewSchema,
 } from './schemas';
 
-const firstMessage = (r: { success: boolean; error?: { issues: { message: string; path: PropertyKey[] }[] } }) =>
-  r.success ? null : r.error!.issues[0]!.message;
+const firstMessage = (r: {
+  success: boolean;
+  error?: { issues: { message: string; path: PropertyKey[] }[] };
+}) => (r.success ? null : r.error!.issues[0]!.message);
 
 describe('password rules', () => {
   it('requires at least 8 characters', () => {
@@ -22,7 +24,13 @@ describe('password rules', () => {
     expect(firstMessage(passwordSchema.safeParse('12345678'))).toMatch(/numeric/);
   });
   it('register requires matching confirmation', () => {
-    const base = { first_name: 'Ana', last_name: 'Cruz', email: 'ana@example.com', phone: '09171234567', password: 'Secret123!' };
+    const base = {
+      first_name: 'Ana',
+      last_name: 'Cruz',
+      email: 'ana@example.com',
+      phone: '09171234567',
+      password: 'Secret123!',
+    };
     expect(registerSchema.safeParse({ ...base, confirm_password: 'Secret123!' }).success).toBe(true);
     const r = registerSchema.safeParse({ ...base, confirm_password: 'Other123!' });
     expect(r.success).toBe(false);
@@ -43,7 +51,12 @@ describe('password rules', () => {
     expect(paths).toContain('phone');
   });
   it('activation uppercases the code', () => {
-    const r = activateSchema.safeParse({ email: 'tech@demo.local', activation_code: ' k7p2-9qxm ', password: 'Tech1234!', confirm_password: 'Tech1234!' });
+    const r = activateSchema.safeParse({
+      email: 'tech@demo.local',
+      activation_code: ' k7p2-9qxm ',
+      password: 'Tech1234!',
+      confirm_password: 'Tech1234!',
+    });
     expect(r.success && r.data.activation_code).toBe('K7P2-9QXM');
   });
 });
@@ -74,8 +87,13 @@ describe('required reasons', () => {
   });
   it('dispute resolution needs a decision and notes', () => {
     expect(resolveDisputeSchema.safeParse({ decision: 'completed', admin_notes: '' }).success).toBe(false);
-    expect(resolveDisputeSchema.safeParse({ decision: 'bogus', admin_notes: 'Checked photos' }).success).toBe(false);
-    expect(resolveDisputeSchema.safeParse({ decision: 'return_in_progress', admin_notes: 'Checked photos' }).success).toBe(true);
+    expect(resolveDisputeSchema.safeParse({ decision: 'bogus', admin_notes: 'Checked photos' }).success).toBe(
+      false,
+    );
+    expect(
+      resolveDisputeSchema.safeParse({ decision: 'return_in_progress', admin_notes: 'Checked photos' })
+        .success,
+    ).toBe(true);
   });
 });
 
@@ -86,7 +104,13 @@ describe('other forms', () => {
     expect(reviewSchema.safeParse({ rating: 5, comment: '' }).success).toBe(true);
   });
   it('generated schedule needs weekdays and end after start', () => {
-    const base = { weekdays: [0, 1], start_time: '08:00', end_time: '17:00', from: '2026-11-01', to: '2026-11-30' };
+    const base = {
+      weekdays: [0, 1],
+      start_time: '08:00',
+      end_time: '17:00',
+      from: '2026-11-01',
+      to: '2026-11-30',
+    };
     expect(generateScheduleSchema.safeParse(base).success).toBe(true);
     expect(generateScheduleSchema.safeParse({ ...base, weekdays: [] }).success).toBe(false);
     expect(generateScheduleSchema.safeParse({ ...base, end_time: '07:00' }).success).toBe(false);

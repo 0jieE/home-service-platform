@@ -5,7 +5,8 @@ import type { ErrorCode } from '@/types/api';
 /** Friendly copy for business error codes (contract §0). The server `detail` is preferred when present. */
 export const ERROR_COPY: Record<ErrorCode, string> = {
   outside_coverage: 'This location is outside Kidapawan City coverage.',
-  no_eligible_technicians: 'No technician is available for that service and time. Try another time or service.',
+  no_eligible_technicians:
+    'No technician is available for that service and time. Try another time or service.',
   technician_unavailable:
     'This technician is no longer available for that time. Please pick another time or technician.',
   booking_conflict: 'That time overlaps another accepted job.',
@@ -16,7 +17,8 @@ export const ERROR_COPY: Record<ErrorCode, string> = {
   profile_incomplete: 'Your profile is incomplete. Complete it first.',
   application_not_approved: 'The application must be approved before creating an account.',
   account_exists: 'An account already exists for this application or email.',
-  invalid_activation: 'The email or activation code is invalid or has expired. Ask the administrator for a new code.',
+  invalid_activation:
+    'The email or activation code is invalid or has expired. Ask the administrator for a new code.',
 };
 
 export interface ApiErrorInfo {
@@ -65,7 +67,8 @@ export function parseApiError(err: unknown): ApiErrorInfo {
   } else if (Array.isArray(data)) {
     message = firstString(data);
   }
-  if (code && code in ERROR_COPY && (!message || message.length > 200)) message = ERROR_COPY[code as ErrorCode];
+  if (code && code in ERROR_COPY && (!message || message.length > 200))
+    message = ERROR_COPY[code as ErrorCode];
   if (!message) {
     if (status === 401) message = 'Please sign in again.';
     else if (status === 403) message = 'You do not have permission to do that.';

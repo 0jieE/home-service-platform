@@ -17,7 +17,16 @@ export interface ModalProps {
 
 const sizes = { sm: 'sm:max-w-md', md: 'sm:max-w-lg', lg: 'sm:max-w-2xl', xl: 'sm:max-w-5xl' };
 
-export function Modal({ open, onClose, title, description, children, footer, size = 'md', dismissible = true }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  size = 'md',
+  dismissible = true,
+}: ModalProps) {
   const titleId = useId();
   const descId = useId();
   const panelRef = useRef<HTMLDivElement>(null);

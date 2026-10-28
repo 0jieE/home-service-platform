@@ -5,7 +5,15 @@ import { cn } from '@/lib/cn';
 import { ratingDisplay } from '@/lib/format';
 import type { CategoryRef, VerificationSummaryItem } from '@/types/api';
 
-export function Specializations({ items, highlightId, className }: { items: CategoryRef[]; highlightId?: number; className?: string }) {
+export function Specializations({
+  items,
+  highlightId,
+  className,
+}: {
+  items: CategoryRef[];
+  highlightId?: number;
+  className?: string;
+}) {
   if (!items?.length) return <span className="text-sm text-slate-500">No specializations listed</span>;
   return (
     <span className={cn('flex flex-wrap gap-1.5', className)}>
@@ -18,7 +26,15 @@ export function Specializations({ items, highlightId, className }: { items: Cate
   );
 }
 
-export function RatingLine({ avg, count, className }: { avg: number | null; count: number; className?: string }) {
+export function RatingLine({
+  avg,
+  count,
+  className,
+}: {
+  avg: number | null;
+  count: number;
+  className?: string;
+}) {
   return (
     <span className={cn('inline-flex items-center gap-1.5 text-sm', className)}>
       {count > 0 ? (
@@ -34,7 +50,13 @@ export function RatingLine({ avg, count, className }: { avg: number | null; coun
 }
 
 /** Separate from the score: shows whether the admin verified credentials. */
-export function CredentialsBadge({ items, loading }: { items: VerificationSummaryItem[] | undefined; loading?: boolean }) {
+export function CredentialsBadge({
+  items,
+  loading,
+}: {
+  items: VerificationSummaryItem[] | undefined;
+  loading?: boolean;
+}) {
   if (loading || !items) return null;
   const verified = items.filter((v) => v.outcome === 'verified');
   if (verified.length) {

@@ -25,11 +25,15 @@ export function useCheckCoverage() {
 export function geometryToPaths(geometry: Coverage['geometry'] | undefined): google.maps.LatLngLiteral[][] {
   if (!geometry) return [];
   const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
-  return polygons.flatMap((rings) => rings.map((ring) => ring.map(([lng, lat]) => ({ lat: lat!, lng: lng! }))));
+  return polygons.flatMap((rings) =>
+    rings.map((ring) => ring.map(([lng, lat]) => ({ lat: lat!, lng: lng! }))),
+  );
 }
 
 /** Bounding box of the coverage geometry, used to restrict address autocomplete. */
-export function geometryBounds(geometry: Coverage['geometry'] | undefined): google.maps.LatLngBoundsLiteral | null {
+export function geometryBounds(
+  geometry: Coverage['geometry'] | undefined,
+): google.maps.LatLngBoundsLiteral | null {
   const paths = geometryToPaths(geometry);
   if (!paths.length) return null;
   let north = -90;

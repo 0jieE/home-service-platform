@@ -23,7 +23,17 @@ export interface Datum {
   value: number;
 }
 
-function ChartTooltip({ active, payload, label, unit }: { active?: boolean; payload?: { value: number }[]; label?: string; unit: string }) {
+function ChartTooltip({
+  active,
+  payload,
+  label,
+  unit,
+}: {
+  active?: boolean;
+  payload?: { value: number }[];
+  label?: string;
+  unit: string;
+}) {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs shadow-md">
@@ -70,7 +80,10 @@ function ChartCard({
       />
       <CardBody>
         {empty ? (
-          <EmptyState title="No data yet" description="Bookings will appear here once customers start booking." />
+          <EmptyState
+            title="No data yet"
+            description="Bookings will appear here once customers start booking."
+          />
         ) : table ? (
           <table className="w-full text-sm">
             <caption className="sr-only">{title}</caption>
@@ -90,7 +103,11 @@ function ChartCard({
             </tbody>
           </table>
         ) : (
-          <div className="h-64" role="img" aria-label={`${title}: ${data.map((d) => `${d.label} ${d.value}`).join(', ')}`}>
+          <div
+            className="h-64"
+            role="img"
+            aria-label={`${title}: ${data.map((d) => `${d.label} ${d.value}`).join(', ')}`}
+          >
             {children}
           </div>
         )}
@@ -101,13 +118,63 @@ function ChartCard({
 
 const axisProps = { stroke: AXIS, fontSize: 12, tickLine: false, axisLine: { stroke: GRID } } as const;
 
-export function BarCard({ title, description, data, unit = 'bookings' }: { title: string; description?: string; data: Datum[]; unit?: string }) {
+/** Horizontal bars: long category names stay readable without rotation. */
+export function HBarCard({
+  title,
+  description,
+  data,
+  unit = 'bookings',
+}: {
+  title: string;
+  description?: string;
+  data: Datum[];
+  unit?: string;
+}) {
+  return (
+    <ChartCard title={title} description={description} data={data} unit={unit}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          layout="vertical"
+          margin={{ top: 4, right: 16, left: 8, bottom: 0 }}
+          barCategoryGap="22%"
+        >
+          <CartesianGrid horizontal={false} stroke={GRID} />
+          <XAxis type="number" allowDecimals={false} {...axisProps} />
+          <YAxis type="category" dataKey="label" {...axisProps} width={150} tick={{ fontSize: 12 }} />
+          <Tooltip cursor={{ fill: '#f1f5f9' }} content={<ChartTooltip unit={unit} />} />
+          <Bar dataKey="value" fill={SERIES} radius={[0, 4, 4, 0]} maxBarSize={26} />
+        </BarChart>
+      </ResponsiveContainer>
+    </ChartCard>
+  );
+}
+
+export function BarCard({
+  title,
+  description,
+  data,
+  unit = 'bookings',
+}: {
+  title: string;
+  description?: string;
+  data: Datum[];
+  unit?: string;
+}) {
   return (
     <ChartCard title={title} description={description} data={data} unit={unit}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }} barCategoryGap="28%">
           <CartesianGrid vertical={false} stroke={GRID} />
-          <XAxis dataKey="label" {...axisProps} interval={0} tick={{ fontSize: 11 }} height={48} angle={data.length > 5 ? -25 : 0} textAnchor={data.length > 5 ? 'end' : 'middle'} />
+          <XAxis
+            dataKey="label"
+            {...axisProps}
+            interval={0}
+            tick={{ fontSize: 11 }}
+            height={48}
+            angle={data.length > 5 ? -25 : 0}
+            textAnchor={data.length > 5 ? 'end' : 'middle'}
+          />
           <YAxis allowDecimals={false} {...axisProps} />
           <Tooltip cursor={{ fill: '#f1f5f9' }} content={<ChartTooltip unit={unit} />} />
           <Bar dataKey="value" fill={SERIES} radius={[4, 4, 0, 0]} maxBarSize={44} />
@@ -117,7 +184,17 @@ export function BarCard({ title, description, data, unit = 'bookings' }: { title
   );
 }
 
-export function LineCard({ title, description, data, unit = 'bookings' }: { title: string; description?: string; data: Datum[]; unit?: string }) {
+export function LineCard({
+  title,
+  description,
+  data,
+  unit = 'bookings',
+}: {
+  title: string;
+  description?: string;
+  data: Datum[];
+  unit?: string;
+}) {
   return (
     <ChartCard title={title} description={description} data={data} unit={unit}>
       <ResponsiveContainer width="100%" height="100%">
@@ -127,7 +204,7 @@ export function LineCard({ title, description, data, unit = 'bookings' }: { titl
           <YAxis allowDecimals={false} {...axisProps} />
           <Tooltip cursor={{ stroke: AXIS, strokeDasharray: '3 3' }} content={<ChartTooltip unit={unit} />} />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="value"
             stroke={SERIES}
             strokeWidth={2}

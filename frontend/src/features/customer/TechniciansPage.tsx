@@ -58,14 +58,21 @@ export function TechniciansPage() {
       <PageHeader title="Browse technicians" description="All approved technicians with complete profiles." />
       <Instructions title="Tip">
         <p>
-          Browsing shows everyone. To see who is <strong>free at a specific time near you</strong>, ranked by distance and
-          rating, use <Link to="/c/find" className="font-medium text-brand-700 underline">Find</Link>.
+          Browsing shows everyone. To see who is <strong>free at a specific time near you</strong>, ranked by
+          distance and rating, use{' '}
+          <Link to="/c/find" className="font-medium text-brand-700 underline">
+            Find
+          </Link>
+          .
         </p>
       </Instructions>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_200px_180px]">
         <div className="relative">
-          <Search className="pointer-events-none absolute top-[38px] left-3 size-5 text-slate-400" aria-hidden="true" />
+          <Search
+            className="pointer-events-none absolute top-[38px] left-3 size-5 text-slate-400"
+            aria-hidden="true"
+          />
           <Input
             label="Search"
             type="search"

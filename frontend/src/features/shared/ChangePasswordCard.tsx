@@ -37,9 +37,27 @@ export function ChangePasswordCard() {
       <CardHeader title="Change password" />
       <CardBody>
         <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-3" noValidate>
-          <Input label="Current password" type="password" autoComplete="current-password" error={errors.old_password?.message} {...register('old_password')} />
-          <Input label="New password" type="password" autoComplete="new-password" error={errors.new_password?.message} {...register('new_password')} />
-          <Input label="Confirm new password" type="password" autoComplete="new-password" error={errors.confirm_password?.message} {...register('confirm_password')} />
+          <Input
+            label="Current password"
+            type="password"
+            autoComplete="current-password"
+            error={errors.old_password?.message}
+            {...register('old_password')}
+          />
+          <Input
+            label="New password"
+            type="password"
+            autoComplete="new-password"
+            error={errors.new_password?.message}
+            {...register('new_password')}
+          />
+          <Input
+            label="Confirm new password"
+            type="password"
+            autoComplete="new-password"
+            error={errors.confirm_password?.message}
+            {...register('confirm_password')}
+          />
           <div className="sm:col-span-3">
             <FormError message={formError} />
             <Button type="submit" variant="outline" loading={isSubmitting} className="mt-2">

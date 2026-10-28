@@ -26,9 +26,9 @@ export function BookingsPage() {
       <PageHeader title="My bookings" description="Track your requests and jobs." />
       <Instructions title="Booking steps">
         <p>
-          <strong>Pending</strong>: waiting for the technician. <strong>Accepted</strong>: the time is reserved.{' '}
-          <strong>In progress</strong>: work started — when the technician asks, confirm completion (or report a problem).
-          After completion you can leave a review.
+          <strong>Pending</strong>: waiting for the technician. <strong>Accepted</strong>: the time is
+          reserved. <strong>In progress</strong>: work started — when the technician asks, confirm completion
+          (or report a problem). After completion you can leave a review.
         </p>
       </Instructions>
       <Tabs
@@ -48,7 +48,11 @@ export function BookingsPage() {
         <EmptyState
           icon={<CalendarX className="size-6" />}
           title={tab === 'active' ? 'No active bookings' : 'No past bookings yet'}
-          description={tab === 'active' ? 'Find a technician and send a booking request.' : 'Completed, declined and cancelled bookings appear here.'}
+          description={
+            tab === 'active'
+              ? 'Find a technician and send a booking request.'
+              : 'Completed, declined and cancelled bookings appear here.'
+          }
           action={<ButtonLink to="/c/find">Find a technician</ButtonLink>}
         />
       ) : (
@@ -60,7 +64,12 @@ export function BookingsPage() {
               </li>
             ))}
           </ul>
-          <Pagination page={page} count={q.data.count} hasNext={!!q.data.next} onChange={(p) => setSp({ tab, page: String(p) })} />
+          <Pagination
+            page={page}
+            count={q.data.count}
+            hasNext={!!q.data.next}
+            onChange={(p) => setSp({ tab, page: String(p) })}
+          />
         </>
       )}
     </div>

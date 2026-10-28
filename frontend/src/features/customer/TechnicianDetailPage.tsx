@@ -69,14 +69,21 @@ export function TechnicianDetailPage() {
                 </span>
               )}
               {t.phone && (
-                <a href={`tel:${t.phone}`} className="inline-flex items-center gap-1.5 text-brand-700 hover:underline">
+                <a
+                  href={`tel:${t.phone}`}
+                  className="inline-flex items-center gap-1.5 text-brand-700 hover:underline"
+                >
                   <Phone className="size-4" /> {t.phone}
                 </a>
               )}
             </div>
             {t.bio && <p className="pt-1 text-sm whitespace-pre-line text-slate-700">{t.bio}</p>}
           </div>
-          <Button size="lg" icon={<CalendarPlus className="size-5" />} onClick={() => navigate(`/c/book/${t.id}`)}>
+          <Button
+            size="lg"
+            icon={<CalendarPlus className="size-5" />}
+            onClick={() => navigate(`/c/book/${t.id}`)}
+          >
             Book
           </Button>
         </CardBody>
@@ -92,7 +99,10 @@ export function TechnicianDetailPage() {
             {t.verification_summary?.length ? (
               <ul className="space-y-2">
                 {t.verification_summary.map((v, i) => (
-                  <li key={i} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-100 px-3 py-2">
+                  <li
+                    key={i}
+                    className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-100 px-3 py-2"
+                  >
                     <span className="inline-flex items-center gap-2 text-sm font-medium">
                       {v.outcome === 'verified' ? (
                         <BadgeCheck className="size-4 text-emerald-600" />
@@ -115,9 +125,16 @@ export function TechnicianDetailPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Operating location" description="Approximate base. Distances in results are straight-line." />
+          <CardHeader
+            title="Operating location"
+            description="Approximate base. Distances in results are straight-line."
+          />
           <CardBody>
-            {t.location ? <PointMap point={t.location} title={t.full_name} /> : <p className="text-sm text-slate-500">No location set.</p>}
+            {t.location ? (
+              <PointMap point={t.location} title={t.full_name} />
+            ) : (
+              <p className="text-sm text-slate-500">No location set.</p>
+            )}
           </CardBody>
         </Card>
       </div>
@@ -164,7 +181,12 @@ export function TechnicianDetailPage() {
                 ))}
               </ul>
               {reviews.data && (
-                <Pagination page={reviewPage} count={reviews.data.count} hasNext={!!reviews.data.next} onChange={setReviewPage} />
+                <Pagination
+                  page={reviewPage}
+                  count={reviews.data.count}
+                  hasNext={!!reviews.data.next}
+                  onChange={setReviewPage}
+                />
               )}
             </>
           )}

@@ -53,12 +53,19 @@ export function ApplicationsPage() {
       />
       <Instructions title="Approval steps">
         <p>
-          1. Record the application. 2. Check each credential and add a verification record (method + outcome). 3. Approve
-          or reject. 4. For approved applicants, create the technician account and give them the one-time activation code.
+          1. Record the application. 2. Check each credential and add a verification record (method +
+          outcome). 3. Approve or reject. 4. For approved applicants, create the technician account and give
+          them the one-time activation code.
         </p>
       </Instructions>
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_220px]">
-        <Input label="Search" type="search" placeholder="Name, email or phone" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input
+          label="Search"
+          type="search"
+          placeholder="Name, email or phone"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <Select
           label="Status"
           value={status ?? ''}
@@ -100,12 +107,17 @@ export function ApplicationsPage() {
               {q.data.results.map((a) => (
                 <Tr key={a.id}>
                   <Td>
-                    <Link to={`/a/applications/${a.id}`} className="font-medium text-brand-700 hover:underline">
+                    <Link
+                      to={`/a/applications/${a.id}`}
+                      className="font-medium text-brand-700 hover:underline"
+                    >
                       {a.first_name} {a.last_name}
                     </Link>
                     <span className="block text-xs text-slate-500">{a.email}</span>
                   </Td>
-                  <Td className="hidden md:table-cell">{a.requested_categories.map((c) => c.name).join(', ') || '—'}</Td>
+                  <Td className="hidden md:table-cell">
+                    {a.requested_categories.map((c) => c.name).join(', ') || '—'}
+                  </Td>
                   <Td>
                     <AppStatusBadge status={a.status} />
                   </Td>
@@ -132,7 +144,15 @@ export function ApplicationsPage() {
   );
 }
 
-const FIELDS = ['first_name', 'last_name', 'email', 'phone', 'address', 'requested_category_ids', 'notes'] as const;
+const FIELDS = [
+  'first_name',
+  'last_name',
+  'email',
+  'phone',
+  'address',
+  'requested_category_ids',
+  'notes',
+] as const;
 
 function CreateApplicationModal({ onClose }: { onClose: () => void }) {
   const categories = useCategories();
@@ -147,7 +167,15 @@ function CreateApplicationModal({ onClose }: { onClose: () => void }) {
     formState: { errors, isSubmitting },
   } = useForm<ApplicationValues>({
     resolver: zodResolver(applicationSchema),
-    defaultValues: { first_name: '', last_name: '', email: '', phone: '', address: '', requested_category_ids: [], notes: '' },
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      address: '',
+      requested_category_ids: [],
+      notes: '',
+    },
   });
 
   const onSubmit = handleSubmit(async (v) => {
@@ -183,8 +211,21 @@ function CreateApplicationModal({ onClose }: { onClose: () => void }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Input label="First name" required error={errors.first_name?.message} {...register('first_name')} />
           <Input label="Last name" required error={errors.last_name?.message} {...register('last_name')} />
-          <Input label="Email" type="email" required hint="Becomes the technician’s login." error={errors.email?.message} {...register('email')} />
-          <Input label="Mobile number" type="tel" required error={errors.phone?.message} {...register('phone')} />
+          <Input
+            label="Email"
+            type="email"
+            required
+            hint="Becomes the technician’s login."
+            error={errors.email?.message}
+            {...register('email')}
+          />
+          <Input
+            label="Mobile number"
+            type="tel"
+            required
+            error={errors.phone?.message}
+            {...register('phone')}
+          />
         </div>
         <Input label="Address" required error={errors.address?.message} {...register('address')} />
         <Controller
@@ -201,15 +242,26 @@ function CreateApplicationModal({ onClose }: { onClose: () => void }) {
                     key={c.id}
                     label={c.name}
                     checked={field.value.includes(c.id)}
-                    onChange={(e) => field.onChange(e.target.checked ? [...field.value, c.id] : field.value.filter((x) => x !== c.id))}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.checked ? [...field.value, c.id] : field.value.filter((x) => x !== c.id),
+                      )
+                    }
                   />
                 ))}
               </div>
-              {errors.requested_category_ids && <p className="text-sm text-red-600">{errors.requested_category_ids.message}</p>}
+              {errors.requested_category_ids && (
+                <p className="text-sm text-red-600">{errors.requested_category_ids.message}</p>
+              )}
             </fieldset>
           )}
         />
-        <Textarea label="Notes" placeholder="Documents submitted, remarks…" error={errors.notes?.message} {...register('notes')} />
+        <Textarea
+          label="Notes"
+          placeholder="Documents submitted, remarks…"
+          error={errors.notes?.message}
+          {...register('notes')}
+        />
         <FormError message={formError} />
       </form>
     </Modal>

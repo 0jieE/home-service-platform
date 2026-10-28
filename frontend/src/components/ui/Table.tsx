@@ -1,7 +1,15 @@
 import type { HTMLAttributes, ReactNode, TdHTMLAttributes, ThHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-export function Table({ className, children, caption }: { className?: string; children: ReactNode; caption?: string }) {
+export function Table({
+  className,
+  children,
+  caption,
+}: {
+  className?: string;
+  children: ReactNode;
+  caption?: string;
+}) {
   return (
     <div className={cn('overflow-x-auto rounded-xl border border-slate-200 bg-white', className)}>
       <table className="min-w-full divide-y divide-slate-200 text-sm">
@@ -28,7 +36,10 @@ export function Th({ className, ...rest }: ThHTMLAttributes<HTMLTableCellElement
   return (
     <th
       scope="col"
-      className={cn('px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase', className)}
+      className={cn(
+        'px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase',
+        className,
+      )}
       {...rest}
     />
   );

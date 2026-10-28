@@ -18,12 +18,24 @@ export interface BaseMapProps {
 }
 
 /** Google map with the app's Map ID (AdvancedMarker), cooperative gestures and the coverage outline. */
-export function BaseMap({ className, center, zoom = 13, showCoverage = true, onClick, children, ariaLabel }: BaseMapProps) {
+export function BaseMap({
+  className,
+  center,
+  zoom = 13,
+  showCoverage = true,
+  onClick,
+  children,
+  ariaLabel,
+}: BaseMapProps) {
   const { cityCenter } = useConfigValues();
   const heightClass = className ?? 'h-72';
   return (
     <MapsGate className={heightClass}>
-      <div className={cn('overflow-hidden rounded-xl border border-slate-200', heightClass)} role="region" aria-label={ariaLabel ?? 'Map'}>
+      <div
+        className={cn('overflow-hidden rounded-xl border border-slate-200', heightClass)}
+        role="region"
+        aria-label={ariaLabel ?? 'Map'}
+      >
         <Map
           mapId={env.googleMapsMapId}
           defaultCenter={center ?? cityCenter}

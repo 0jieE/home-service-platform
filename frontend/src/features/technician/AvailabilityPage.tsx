@@ -4,7 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight, Lock, Plus, Trash2, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useBookings } from '@/api/bookings';
-import { useCreateSlot, useDeleteSlot, useGenerateSchedule, useMyAvailability, useUpdateSlot } from '@/api/technicians';
+import {
+  useCreateSlot,
+  useDeleteSlot,
+  useGenerateSchedule,
+  useMyAvailability,
+  useUpdateSlot,
+} from '@/api/technicians';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { ErrorState } from '@/components/ui/EmptyState';
@@ -25,7 +31,12 @@ import {
   shiftDate,
   timeOptions,
 } from '@/lib/format';
-import { generateScheduleSchema, slotSchema, type GenerateScheduleValues, type SlotValues } from '@/types/schemas';
+import {
+  generateScheduleSchema,
+  slotSchema,
+  type GenerateScheduleValues,
+  type SlotValues,
+} from '@/types/schemas';
 import type { AvailabilitySlot } from '@/types/api';
 
 /** Contract weekdays: 0 = Monday … 6 = Sunday (Python's date.weekday()). */
@@ -61,7 +72,12 @@ export function AvailabilityPage() {
     const map: Record<string, { id: number; start: string; end: string; label: string }[]> = {};
     for (const b of reserved.data?.results ?? []) {
       const d = manilaDateOf(b.start);
-      (map[d] ??= []).push({ id: b.id, start: b.start, end: b.end, label: `${b.category.name} · ${b.customer.full_name}` });
+      (map[d] ??= []).push({
+        id: b.id,
+        start: b.start,
+        end: b.end,
+        label: `${b.category.name} · ${b.customer.full_name}`,
+      });
     }
     return map;
   }, [reserved.data]);
@@ -73,10 +89,17 @@ export function AvailabilityPage() {
         description="When customers can book you."
         actions={
           <>
-            <Button variant="outline" icon={<Wand2 className="size-4" />} onClick={() => setShowGenerate(true)}>
+            <Button
+              variant="outline"
+              icon={<Wand2 className="size-4" />}
+              onClick={() => setShowGenerate(true)}
+            >
               Generate weekly schedule
             </Button>
-            <Button icon={<Plus className="size-4" />} onClick={() => setEditing({ date: today >= weekStart && today <= weekEnd ? today : weekStart })}>
+            <Button
+              icon={<Plus className="size-4" />}
+              onClick={() => setEditing({ date: today >= weekStart && today <= weekEnd ? today : weekStart })}
+            >
               Add slot
             </Button>
           </>
@@ -84,26 +107,37 @@ export function AvailabilityPage() {
       />
       <Instructions title="How availability works">
         <p>
-          Customers can only book a time that fits completely inside one of your <strong>available</strong> slots. Mark
-          time as <strong>unavailable</strong> to block it. Accepted jobs are shown with a lock and can’t be removed from
-          here — a slot containing an accepted job can’t be deleted or shortened.
+          Customers can only book a time that fits completely inside one of your <strong>available</strong>{' '}
+          slots. Mark time as <strong>unavailable</strong> to block it. Accepted jobs are shown with a lock
+          and can’t be removed from here — a slot containing an accepted job can’t be deleted or shortened.
         </p>
       </Instructions>
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="sm" aria-label="Previous week" onClick={() => setWeekStart(shiftDate(weekStart, -7))}>
+          <Button
+            variant="outline"
+            size="sm"
+            aria-label="Previous week"
+            onClick={() => setWeekStart(shiftDate(weekStart, -7))}
+          >
             <ChevronLeft className="size-4" />
           </Button>
           <Button variant="outline" size="sm" onClick={() => setWeekStart(mondayOf(today))}>
             This week
           </Button>
-          <Button variant="outline" size="sm" aria-label="Next week" onClick={() => setWeekStart(shiftDate(weekStart, 7))}>
+          <Button
+            variant="outline"
+            size="sm"
+            aria-label="Next week"
+            onClick={() => setWeekStart(shiftDate(weekStart, 7))}
+          >
             <ChevronRight className="size-4" />
           </Button>
         </div>
         <p className="text-sm font-medium text-slate-700">
-          {formatDate(`${weekStart}T12:00:00+08:00`, 'MMM d')} – {formatDate(`${weekEnd}T12:00:00+08:00`, 'MMM d, yyyy')}
+          {formatDate(`${weekStart}T12:00:00+08:00`, 'MMM d')} –{' '}
+          {formatDate(`${weekEnd}T12:00:00+08:00`, 'MMM d, yyyy')}
         </p>
       </div>
 
@@ -120,7 +154,7 @@ export function AvailabilityPage() {
                 key={d}
                 aria-label={formatDate(`${d}T12:00:00+08:00`, 'EEEE, MMMM d')}
                 className={cn(
-                  'flex min-h-40 flex-col rounded-xl border bg-white p-2',
+                  'flex flex-col rounded-xl border bg-white p-2 md:min-h-40',
                   d === today ? 'border-brand-400 ring-1 ring-brand-200' : 'border-slate-200',
                   past && 'opacity-60',
                 )}
@@ -146,12 +180,17 @@ export function AvailabilityPage() {
                         )}
                       >
                         {formatTimeRange(s.start, s.end)}
-                        <span className="block font-normal">{s.state === 'available' ? 'Available' : 'Unavailable'}</span>
+                        <span className="block font-normal">
+                          {s.state === 'available' ? 'Available' : 'Unavailable'}
+                        </span>
                       </button>
                     ))
                   )}
                   {dayReserved.map((r) => (
-                    <div key={r.id} className="rounded-lg bg-sky-50 px-2 py-1.5 text-xs text-sky-900 ring-1 ring-sky-200">
+                    <div
+                      key={r.id}
+                      className="rounded-lg bg-sky-50 px-2 py-1.5 text-xs text-sky-900 ring-1 ring-sky-200"
+                    >
                       <span className="flex items-center gap-1 font-medium">
                         <Lock className="size-3" /> {formatTimeRange(r.start, r.end)}
                       </span>
@@ -177,7 +216,14 @@ export function AvailabilityPage() {
         </div>
       )}
 
-      {editing && <SlotModal key={editing.slot?.id ?? editing.date} slot={editing.slot} date={editing.date} onClose={() => setEditing(null)} />}
+      {editing && (
+        <SlotModal
+          key={editing.slot?.id ?? editing.date}
+          slot={editing.slot}
+          date={editing.date}
+          onClose={() => setEditing(null)}
+        />
+      )}
       {showGenerate && <GenerateModal onClose={() => setShowGenerate(false)} />}
     </div>
   );
@@ -198,20 +244,34 @@ function SlotModal({ slot, date, onClose }: { slot?: AvailabilitySlot; date: str
   } = useForm<SlotValues>({
     resolver: zodResolver(slotSchema),
     defaultValues: slot
-      ? { date: manilaDateOf(slot.start), start_time: manilaTimeOf(slot.start), end_time: manilaTimeOf(slot.end), state: slot.state }
+      ? {
+          date: manilaDateOf(slot.start),
+          start_time: manilaTimeOf(slot.start),
+          end_time: manilaTimeOf(slot.end),
+          state: slot.state,
+        }
       : { date, start_time: '08:00', end_time: '17:00', state: 'available' },
   });
 
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
-    const body = { start: manilaIso(v.date, v.start_time), end: manilaIso(v.date, v.end_time), state: v.state };
+    const body = {
+      start: manilaIso(v.date, v.start_time),
+      end: manilaIso(v.date, v.end_time),
+      state: v.state,
+    };
     try {
       if (slot) await update.mutateAsync({ id: slot.id, body });
       else await create.mutateAsync(body);
       toast.success(slot ? 'Slot updated.' : 'Slot added.');
       onClose();
     } catch (err) {
-      setFormError(applyApiErrors(err, setError, ['date', 'start_time', 'end_time', 'state'], { start: 'start_time', end: 'end_time' }));
+      setFormError(
+        applyApiErrors(err, setError, ['date', 'start_time', 'end_time', 'state'], {
+          start: 'start_time',
+          end: 'end_time',
+        }),
+      );
     }
   });
 
@@ -236,7 +296,12 @@ function SlotModal({ slot, date, onClose }: { slot?: AvailabilitySlot; date: str
         footer={
           <>
             {slot && (
-              <Button variant="ghost" className="text-red-700 sm:mr-auto" icon={<Trash2 className="size-4" />} onClick={() => setConfirmDelete(true)}>
+              <Button
+                variant="ghost"
+                className="text-red-700 sm:mr-auto"
+                icon={<Trash2 className="size-4" />}
+                onClick={() => setConfirmDelete(true)}
+              >
                 Delete
               </Button>
             )}
@@ -250,10 +315,29 @@ function SlotModal({ slot, date, onClose }: { slot?: AvailabilitySlot; date: str
         }
       >
         <form id="slot-form" onSubmit={onSubmit} className="space-y-4" noValidate>
-          <Input label="Date" type="date" required min={manilaDateString()} error={errors.date?.message} {...register('date')} />
+          <Input
+            label="Date"
+            type="date"
+            required
+            min={manilaDateString()}
+            error={errors.date?.message}
+            {...register('date')}
+          />
           <div className="grid grid-cols-2 gap-3">
-            <Select label="From" required options={opts} error={errors.start_time?.message} {...register('start_time')} />
-            <Select label="To" required options={opts} error={errors.end_time?.message} {...register('end_time')} />
+            <Select
+              label="From"
+              required
+              options={opts}
+              error={errors.start_time?.message}
+              {...register('start_time')}
+            />
+            <Select
+              label="To"
+              required
+              options={opts}
+              error={errors.end_time?.message}
+              {...register('end_time')}
+            />
           </div>
           <Select
             label="State"
@@ -302,12 +386,18 @@ function GenerateModal({ onClose }: { onClose: () => void }) {
     },
   });
 
-
   const onSubmit = handleSubmit(async (v) => {
     setFormError(null);
     try {
       const res = await generate.mutateAsync(v);
-      toast.success(res.created ? `Created ${res.created} slot${res.created === 1 ? '' : 's'}. Overlapping days were skipped.` : 'No new slots — those days already have overlapping slots.');
+      const skipped = res.skipped
+        ? ` ${res.skipped} day${res.skipped === 1 ? '' : 's'} skipped (overlapping or past).`
+        : '';
+      toast.success(
+        res.created
+          ? `Created ${res.created} slot${res.created === 1 ? '' : 's'}.${skipped}`
+          : `No new slots — those days already have overlapping slots or have passed.`,
+      );
       onClose();
     } catch (err) {
       setFormError(applyApiErrors(err, setError, ['weekdays', 'start_time', 'end_time', 'from', 'to']));
@@ -345,7 +435,9 @@ function GenerateModal({ onClose }: { onClose: () => void }) {
                     label={w}
                     checked={field.value.includes(i)}
                     onChange={(e) =>
-                      field.onChange(e.target.checked ? [...field.value, i].sort() : field.value.filter((x) => x !== i))
+                      field.onChange(
+                        e.target.checked ? [...field.value, i].sort() : field.value.filter((x) => x !== i),
+                      )
                     }
                   />
                 ))}
@@ -355,12 +447,34 @@ function GenerateModal({ onClose }: { onClose: () => void }) {
           )}
         />
         <div className="grid grid-cols-2 gap-3">
-          <Select label="Daily start" options={opts} error={errors.start_time?.message} {...register('start_time')} />
-          <Select label="Daily end" options={opts} error={errors.end_time?.message} {...register('end_time')} />
+          <Select
+            label="Daily start"
+            options={opts}
+            error={errors.start_time?.message}
+            {...register('start_time')}
+          />
+          <Select
+            label="Daily end"
+            options={opts}
+            error={errors.end_time?.message}
+            {...register('end_time')}
+          />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Input label="From date" type="date" min={manilaDateString()} error={errors.from?.message} {...register('from')} />
-          <Input label="To date" type="date" min={manilaDateString()} error={errors.to?.message} {...register('to')} />
+          <Input
+            label="From date"
+            type="date"
+            min={manilaDateString()}
+            error={errors.from?.message}
+            {...register('from')}
+          />
+          <Input
+            label="To date"
+            type="date"
+            min={manilaDateString()}
+            error={errors.to?.message}
+            {...register('to')}
+          />
         </div>
         <FormError message={formError} />
       </form>

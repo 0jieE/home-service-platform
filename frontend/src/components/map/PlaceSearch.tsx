@@ -22,7 +22,13 @@ interface Suggestion {
  * Address search with Places API (New): AutocompleteSuggestion + session token,
  * custom Tailwind dropdown, restricted to the Philippines around Kidapawan.
  */
-export function PlaceSearch({ onSelect, disabled }: { onSelect: (r: PlaceResult) => void; disabled?: boolean }) {
+export function PlaceSearch({
+  onSelect,
+  disabled,
+}: {
+  onSelect: (r: PlaceResult) => void;
+  disabled?: boolean;
+}) {
   const places = useMapsLibrary('places');
   const { cityCenter } = useConfigValues();
   const coverage = useCoverage();
@@ -57,7 +63,8 @@ export function PlaceSearch({ onSelect, disabled }: { onSelect: (r: PlaceResult)
         };
         if (bounds) request.locationRestriction = bounds;
         else request.locationBias = { center: cityCenter, radius: 15000 };
-        const { suggestions: raw } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+        const { suggestions: raw } =
+          await places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
         if (seq !== requestSeq.current) return;
         const list: Suggestion[] = [];
         for (const s of raw) {
@@ -139,7 +146,9 @@ export function PlaceSearch({ onSelect, disabled }: { onSelect: (r: PlaceResult)
           aria-activedescendant={active >= 0 && open ? `${listId}-${active}` : undefined}
           autoComplete="off"
           disabled={disabled || !places}
-          placeholder={places ? 'Search address, barangay or landmark in Kidapawan' : 'Loading address search…'}
+          placeholder={
+            places ? 'Search address, barangay or landmark in Kidapawan' : 'Loading address search…'
+          }
           value={input}
           onChange={(e) => {
             setInput(e.target.value);

@@ -26,9 +26,14 @@ export function Brand({ to = '/' }: { to?: string }) {
       <span className="flex size-9 items-center justify-center rounded-lg bg-brand-700 text-white">
         <MapPin className="size-5" aria-hidden="true" />
       </span>
-      <span className="leading-tight">
-        <span className="block text-sm">Kidapawan Home Service</span>
-        <span className="block text-xs font-normal text-slate-500">Technician finder & booking</span>
+      <span className="min-w-0 leading-tight">
+        <span className="block truncate text-sm">
+          <span className="sm:hidden">Kidapawan Service</span>
+          <span className="hidden sm:inline">Kidapawan Home Service</span>
+        </span>
+        <span className="hidden text-xs font-normal text-slate-500 sm:block">
+          Technician finder & booking
+        </span>
       </span>
     </Link>
   );
@@ -200,7 +205,11 @@ export function AppShell({ role }: { role: Role }) {
       {/* Mobile drawer */}
       {drawer && (
         <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setDrawer(false)} aria-hidden="true" />
+          <div
+            className="absolute inset-0 bg-slate-900/40"
+            onClick={() => setDrawer(false)}
+            aria-hidden="true"
+          />
           <div className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white shadow-xl">
             <div className="flex h-16 items-center justify-between border-b border-slate-100 px-4">
               <span className="text-sm font-semibold">

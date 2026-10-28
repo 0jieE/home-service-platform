@@ -32,7 +32,8 @@ export function PublicLayout() {
         <Outlet />
       </main>
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        Location-Aware Decision Support Platform for Home Service Technician Matching and Booking · Kidapawan City
+        Location-Aware Decision Support Platform for Home Service Technician Matching and Booking · Kidapawan
+        City
       </footer>
     </div>
   );

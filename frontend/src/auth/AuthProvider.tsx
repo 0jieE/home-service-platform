@@ -10,7 +10,9 @@ import { tokenStorage } from './tokenStorage';
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
-  const [status, setStatus] = useState<AuthStatus>(() => (tokenStorage.getRefresh() ? 'loading' : 'anonymous'));
+  const [status, setStatus] = useState<AuthStatus>(() =>
+    tokenStorage.getRefresh() ? 'loading' : 'anonymous',
+  );
 
   const signOutLocally = useCallback(() => {
     tokenStorage.clear();

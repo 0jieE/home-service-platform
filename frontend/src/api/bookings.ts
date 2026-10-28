@@ -1,4 +1,10 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useSocketConnected } from '@/lib/ws';
 import type { Booking, BookingAction, BookingStatus, Paginated, Point, Review } from '@/types/api';
@@ -105,10 +111,18 @@ export async function bookingAction(
 export function useBookingAction() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, action, body }: { id: number; action: ActionPath; body?: { reason?: string; notes?: string } }) =>
-      bookingAction(id, action, body),
+    mutationFn: ({
+      id,
+      action,
+      body,
+    }: {
+      id: number;
+      action: ActionPath;
+      body?: { reason?: string; notes?: string };
+    }) => bookingAction(id, action, body),
     onSuccess: (booking) => {
-      if (booking && typeof booking === 'object' && 'id' in booking) qc.setQueryData(qk.booking(booking.id), booking);
+      if (booking && typeof booking === 'object' && 'id' in booking)
+        qc.setQueryData(qk.booking(booking.id), booking);
       invalidateBookingQueries(qc, booking?.id);
     },
     onError: (_err, vars) => {
@@ -126,7 +140,8 @@ export async function createReview(id: number, body: { rating: number; comment: 
 export function useCreateReview() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, body }: { id: number; body: { rating: number; comment: string } }) => createReview(id, body),
+    mutationFn: ({ id, body }: { id: number; body: { rating: number; comment: string } }) =>
+      createReview(id, body),
     onSuccess: (_review, vars) => invalidateBookingQueries(qc, vars.id),
   });
 }

@@ -21,7 +21,11 @@ export function ActivatePage() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<ActivateValues, unknown, { email: string; activation_code: string; password: string; confirm_password: string }>({
+  } = useForm<
+    ActivateValues,
+    unknown,
+    { email: string; activation_code: string; password: string; confirm_password: string }
+  >({
     resolver: zodResolver(activateSchema),
     defaultValues: {
       email: params.get('email') ?? '',

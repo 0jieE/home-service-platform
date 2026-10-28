@@ -72,7 +72,10 @@ export function ResultCard({
         <div className="flex items-center gap-2">
           <dt className="sr-only">Rating</dt>
           <dd>
-            <RatingLine avg={result.has_ratings ? t.rating_avg : null} count={result.has_ratings ? t.rating_count : 0} />
+            <RatingLine
+              avg={result.has_ratings ? t.rating_avg : null}
+              count={result.has_ratings ? t.rating_count : 0}
+            />
           </dd>
         </div>
         <div className="flex items-center gap-2 sm:col-span-2">
@@ -98,7 +101,12 @@ export function ResultCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <label className={cn('inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm', compareDisabled && !compareChecked && 'cursor-not-allowed opacity-50')}>
+        <label
+          className={cn(
+            'inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm',
+            compareDisabled && !compareChecked && 'cursor-not-allowed opacity-50',
+          )}
+        >
           <input
             type="checkbox"
             className="size-5 accent-brand-700"

@@ -167,6 +167,8 @@ export interface BookingDisputeInfo {
 export interface StatusHistoryEntry {
   from_status: BookingStatus | null;
   to_status: BookingStatus;
+  /** Backend extra: the event name, e.g. completion_requested. */
+  event?: BookingEvent;
   actor_role: ActorRole;
   actor_name: string | null;
   reason: string;
@@ -185,6 +187,9 @@ export interface Booking {
   end: string;
   notes: string;
   distance_km: number | null;
+  /** Backend extras (not in contract v1): set on start / completion request. */
+  started_at?: string | null;
+  completion_notes?: string;
   completion_requested_at: string | null;
   completed_at: string | null;
   confirmed_by: 'customer' | 'admin' | null;
@@ -221,8 +226,7 @@ export interface AppConfig {
 }
 
 export type GeoJsonGeometry =
-  | { type: 'Polygon'; coordinates: number[][][] }
-  | { type: 'MultiPolygon'; coordinates: number[][][][] };
+  { type: 'Polygon'; coordinates: number[][][] } | { type: 'MultiPolygon'; coordinates: number[][][][] };
 
 export interface Coverage {
   name: string;
@@ -320,7 +324,13 @@ export interface AdminStats {
   bookings_by_status: { status: BookingStatus; count: number }[];
   bookings_by_category: { category: string; count: number }[];
   bookings_per_week: { week_start: string; count: number }[];
-  top_technicians: { id: number; full_name: string; rating_avg: number | null; rating_count: number; completed: number }[];
+  top_technicians: {
+    id: number;
+    full_name: string;
+    rating_avg: number | null;
+    rating_count: number;
+    completed: number;
+  }[];
 }
 
 export interface AdminDispute {
@@ -331,6 +341,7 @@ export interface AdminDispute {
   decision: DisputeDecision | null;
   admin_notes: string;
   opened_by_name: string;
+  resolved_by_name?: string | null;
   created_at: string;
   resolved_at: string | null;
 }

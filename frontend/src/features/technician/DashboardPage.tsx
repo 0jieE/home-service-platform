@@ -37,17 +37,30 @@ export function TechnicianDashboardPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title={`Hello${me.data ? `, ${me.data.full_name.split(' ')[0]}` : ''}`} description="Your requests, today’s jobs and ratings at a glance." />
+      <PageHeader
+        title={`Hello${me.data ? `, ${me.data.full_name.split(' ')[0]}` : ''}`}
+        description="Your requests, today’s jobs and ratings at a glance."
+      />
       <Instructions title="Your job as a technician">
-        <p>Keep your availability up to date so customers can find you. Accept or decline requests quickly. When a job is done, request completion confirmation from the customer.</p>
+        <p>
+          Keep your availability up to date so customers can find you. Accept or decline requests quickly.
+          When a job is done, request completion confirmation from the customer.
+        </p>
       </Instructions>
 
       {me.isError && <ErrorState message={errorMessage(me.error)} onRetry={() => me.refetch()} />}
       {me.data && (missing.length > 0 || me.data.is_profile_complete === false) && (
-        <Alert tone="amber" icon={<AlertTriangle className="size-5" />} title="Your profile is incomplete — you won’t appear in recommendations yet">
+        <Alert
+          tone="amber"
+          icon={<AlertTriangle className="size-5" />}
+          title="Your profile is incomplete — you won’t appear in recommendations yet"
+        >
           <p>
             Missing:{' '}
-            {missing.length ? missing.map((f) => FIELD_LABEL[f] ?? titleCase(f)).join(', ') : 'required details'}.
+            {missing.length
+              ? missing.map((f) => FIELD_LABEL[f] ?? titleCase(f)).join(', ')
+              : 'required details'}
+            .
           </p>
           <Link to="/t/profile" className="mt-2 inline-block font-semibold underline">
             Complete my profile →
@@ -104,7 +117,14 @@ export function TechnicianDashboardPage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Today’s jobs" action={<ButtonLink to="/t/jobs" variant="ghost" size="sm">All jobs</ButtonLink>} />
+          <CardHeader
+            title="Today’s jobs"
+            action={
+              <ButtonLink to="/t/jobs" variant="ghost" size="sm">
+                All jobs
+              </ButtonLink>
+            }
+          />
           <CardBody>
             {upcoming.isLoading ? (
               <SkeletonList rows={2} />
@@ -122,7 +142,14 @@ export function TechnicianDashboardPage() {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title="Newest requests" action={<ButtonLink to="/t/requests" variant="ghost" size="sm">All requests</ButtonLink>} />
+          <CardHeader
+            title="Newest requests"
+            action={
+              <ButtonLink to="/t/requests" variant="ghost" size="sm">
+                All requests
+              </ButtonLink>
+            }
+          />
           <CardBody>
             {pending.isLoading ? (
               <SkeletonList rows={2} />
@@ -138,7 +165,11 @@ export function TechnicianDashboardPage() {
               <EmptyState
                 title="No pending requests"
                 description="Make sure your availability covers the times customers need."
-                action={<ButtonLink to="/t/availability" variant="outline">Manage availability</ButtonLink>}
+                action={
+                  <ButtonLink to="/t/availability" variant="outline">
+                    Manage availability
+                  </ButtonLink>
+                }
               />
             )}
           </CardBody>

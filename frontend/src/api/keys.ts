@@ -11,7 +11,8 @@ export const qk = {
     ['technician', id, 'availability', { from, to }] as const,
   technicianReviews: (id: number, page: number) => ['technician', id, 'reviews', page] as const,
   techMe: ['technician', 'me'] as const,
-  techMyAvailability: (from?: string, to?: string) => ['technician', 'me', 'availability', { from, to }] as const,
+  techMyAvailability: (from?: string, to?: string) =>
+    ['technician', 'me', 'availability', { from, to }] as const,
   recommendations: (params: object) => ['recommendations', params] as const,
   bookings: (params?: object) => (params ? (['bookings', params] as const) : (['bookings'] as const)),
   booking: (id: number) => ['booking', id] as const,

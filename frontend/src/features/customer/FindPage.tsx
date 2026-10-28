@@ -10,7 +10,11 @@ import { useConfigValues } from '@/api/config';
 import { qk } from '@/api/keys';
 import { useRecommendations } from '@/api/recommendations';
 import { getTechnician } from '@/api/technicians';
-import { LocationPicker, OUTSIDE_COVERAGE_MESSAGE, type CoverageStatus } from '@/components/map/LocationPicker';
+import {
+  LocationPicker,
+  OUTSIDE_COVERAGE_MESSAGE,
+  type CoverageStatus,
+} from '@/components/map/LocationPicker';
 import { TechnicianMap } from '@/components/map/TechnicianMap';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody } from '@/components/ui/Card';
@@ -45,7 +49,8 @@ function readParams(sp: URLSearchParams) {
   const date = sp.get('date') ?? '';
   const time = sp.get('time') ?? '';
   const address = sp.get('address') ?? '';
-  const complete = category > 0 && Number.isFinite(lat) && Number.isFinite(lng) && sp.has('lat') && !!date && !!time;
+  const complete =
+    category > 0 && Number.isFinite(lat) && Number.isFinite(lng) && sp.has('lat') && !!date && !!time;
   return { category, lat, lng, date, time, address, complete };
 }
 
@@ -109,7 +114,8 @@ export function FindPage() {
   });
   const verification: Record<number, VerificationSummaryItem[] | undefined> = {};
   results.forEach((r, i) => {
-    verification[r.technician.id] = details[i]?.data?.verification_summary ?? (details[i]?.isError ? [] : undefined);
+    verification[r.technician.id] =
+      details[i]?.data?.verification_summary ?? (details[i]?.isError ? [] : undefined);
   });
 
   const [selected, setSelected] = useState<number | null>(null);
@@ -124,7 +130,14 @@ export function FindPage() {
     setSelected(null);
   }, [searchKey]);
 
-  const runSearch = (values: { category_id: number; lat: number; lng: number; address: string; date: string; time: string }) => {
+  const runSearch = (values: {
+    category_id: number;
+    lat: number;
+    lng: number;
+    address: string;
+    date: string;
+    time: string;
+  }) => {
     const next = new URLSearchParams({
       category: String(values.category_id),
       lat: values.lat.toFixed(6),
@@ -145,7 +158,14 @@ export function FindPage() {
       return;
     }
     const loc = v.location!;
-    runSearch({ category_id: v.category_id, lat: loc.lat, lng: loc.lng, address: v.address, date: v.date, time: v.time });
+    runSearch({
+      category_id: v.category_id,
+      lat: loc.lat,
+      lng: loc.lng,
+      address: v.address,
+      date: v.date,
+      time: v.time,
+    });
   });
 
   const shiftSearch = (minutes: number) => {
@@ -183,16 +203,25 @@ export function FindPage() {
   };
 
   const toggleCompare = (id: number) =>
-    setCompare((c) => (c.includes(id) ? c.filter((x) => x !== id) : c.length >= MAX_COMPARE ? c : [...c, id]));
+    setCompare((c) =>
+      c.includes(id) ? c.filter((x) => x !== id) : c.length >= MAX_COMPARE ? c : [...c, id],
+    );
 
   return (
     <div>
-      <PageHeader title="Find a technician" description="Get a ranked list of nearby technicians who are free when you need them." />
+      <PageHeader
+        title="Find a technician"
+        description="Get a ranked list of nearby technicians who are free when you need them."
+      />
       <Instructions title="How to search">
-        <p>1. Choose the service. 2. Set where the work will be done (inside Kidapawan City). 3. Pick a date and start time.</p>
         <p>
-          Results are ranked by an overall score that combines closeness and customer ratings. Open “Why this score?” on
-          any card to see the calculation. Booking sends a request — the technician still has to accept.
+          1. Choose the service. 2. Set where the work will be done (inside Kidapawan City). 3. Pick a date
+          and start time.
+        </p>
+        <p>
+          Results are ranked by an overall score that combines closeness and customer ratings. Open “Why this
+          score?” on any card to see the calculation. Booking sends a request — the technician still has to
+          accept.
         </p>
       </Instructions>
 
@@ -212,18 +241,24 @@ export function FindPage() {
                 />
               )}
             />
-            {categories.isError && <FormError message={`Could not load services: ${errorMessage(categories.error)}`} />}
+            {categories.isError && (
+              <FormError message={`Could not load services: ${errorMessage(categories.error)}`} />
+            )}
 
             <LocationPicker
               required
               value={location ? { ...location, address: address ?? '' } : null}
               onChange={(v) => {
-                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, { shouldValidate: !!errors.location });
+                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, {
+                  shouldValidate: !!errors.location,
+                });
                 setValue('address', v?.address ?? '');
               }}
               onCoverageChange={setCoverage}
               error={errors.location?.message}
-              hint={profile.data?.default_location ? 'Prefilled from your profile’s default address.' : undefined}
+              hint={
+                profile.data?.default_location ? 'Prefilled from your profile’s default address.' : undefined
+              }
             />
 
             <Controller
@@ -296,7 +331,9 @@ export function FindPage() {
               <EmptyState
                 icon={<SearchX className="size-6" />}
                 title="No technician is available"
-                description={data.empty_reason?.message ?? 'No eligible technician for this service and time.'}
+                description={
+                  data.empty_reason?.message ?? 'No eligible technician for this service and time.'
+                }
                 action={
                   <>
                     <Button variant="outline" onClick={() => shiftSearch(120)}>
@@ -305,12 +342,22 @@ export function FindPage() {
                     <Button variant="outline" onClick={() => shiftSearch(24 * 60)}>
                       Same time tomorrow
                     </Button>
-                    <Button variant="outline" onClick={() => {
-                      const d = shiftDate(url.date, 1);
-                      setValue('date', d);
-                      setValue('time', '08:00');
-                      runSearch({ category_id: url.category, lat: url.lat, lng: url.lng, address: url.address, date: d, time: '08:00' });
-                    }}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        const d = shiftDate(url.date, 1);
+                        setValue('date', d);
+                        setValue('time', '08:00');
+                        runSearch({
+                          category_id: url.category,
+                          lat: url.lat,
+                          lng: url.lng,
+                          address: url.address,
+                          date: d,
+                          time: '08:00',
+                        });
+                      }}
+                    >
                       Tomorrow 8:00 AM
                     </Button>
                     <Button variant="secondary" onClick={focusCategory}>
@@ -346,7 +393,9 @@ export function FindPage() {
                       selectedId={selected}
                       onSelect={(id) => {
                         setSelected(id);
-                        document.getElementById(`result-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        document
+                          .getElementById(`result-${id}`)
+                          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                       }}
                       markers={results.map((r) => ({
                         id: r.technician.id,
@@ -356,7 +405,8 @@ export function FindPage() {
                       }))}
                     />
                     <p className="mt-2 text-xs text-slate-500">
-                      Dark pin = your location. Numbers = rank. Distances are straight-line, not road distance.
+                      Dark pin = your location. Numbers = rank. Distances are straight-line, not road
+                      distance.
                     </p>
                   </div>
                 </div>
@@ -375,7 +425,12 @@ export function FindPage() {
             <Button size="sm" variant="ghost" onClick={() => setCompare([])}>
               Clear
             </Button>
-            <Button size="sm" disabled={compare.length < 2} onClick={() => setShowCompare(true)} icon={<Columns3 className="size-4" />}>
+            <Button
+              size="sm"
+              disabled={compare.length < 2}
+              onClick={() => setShowCompare(true)}
+              icon={<Columns3 className="size-4" />}
+            >
               Compare
             </Button>
           </div>

@@ -72,7 +72,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const autoId = useId();
   const fid = id ?? autoId;
   return (
-    <FieldShell id={fid} label={label} hint={hint} error={error} required={required} className={wrapperClassName}>
+    <FieldShell
+      id={fid}
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      className={wrapperClassName}
+    >
       <input
         ref={ref}
         id={fid}
@@ -102,7 +109,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   const autoId = useId();
   const fid = id ?? autoId;
   return (
-    <FieldShell id={fid} label={label} hint={hint} error={error} required={required} className={wrapperClassName}>
+    <FieldShell
+      id={fid}
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      className={wrapperClassName}
+    >
       <select
         ref={ref}
         id={fid}
@@ -138,7 +152,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   const autoId = useId();
   const fid = id ?? autoId;
   return (
-    <FieldShell id={fid} label={label} hint={hint} error={error} required={required} className={wrapperClassName}>
+    <FieldShell
+      id={fid}
+      label={label}
+      hint={hint}
+      error={error}
+      required={required}
+      className={wrapperClassName}
+    >
       <textarea
         ref={ref}
         id={fid}
@@ -161,7 +182,10 @@ export function Checkbox({
 }: InputHTMLAttributes<HTMLInputElement> & { label: ReactNode; description?: ReactNode }) {
   const id = useId();
   return (
-    <label htmlFor={rest.id ?? id} className={cn('flex min-h-11 cursor-pointer items-start gap-3 py-1', className)}>
+    <label
+      htmlFor={rest.id ?? id}
+      className={cn('flex min-h-11 cursor-pointer items-start gap-3 py-1', className)}
+    >
       <input
         id={rest.id ?? id}
         type="checkbox"

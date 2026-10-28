@@ -20,11 +20,15 @@ export function CompareModal({
 }) {
   const rows: { label: string; render: (r: RecommendationResult) => React.ReactNode }[] = [
     { label: 'Rank', render: (r) => <span className="text-lg font-bold">#{r.rank}</span> },
-    { label: 'Overall score', render: (r) => <span className="font-semibold tabular-nums">{formatScore(r.score)}</span> },
+    {
+      label: 'Overall score',
+      render: (r) => <span className="font-semibold tabular-nums">{formatScore(r.score)}</span>,
+    },
     { label: 'Distance', render: (r) => distanceLabel(r.distance_km) },
     {
       label: 'Rating',
-      render: (r) => (r.has_ratings ? ratingDisplay(r.technician.rating_avg, r.technician.rating_count) : 'No ratings yet'),
+      render: (r) =>
+        r.has_ratings ? ratingDisplay(r.technician.rating_avg, r.technician.rating_count) : 'No ratings yet',
     },
     { label: 'Proximity score', render: (r) => formatScore(r.proximity_score) },
     { label: 'Rating score', render: (r) => formatScore(r.rating_score) },
@@ -33,17 +37,33 @@ export function CompareModal({
       render: (r) => <span className="font-mono text-xs">{scoreBreakdownText(r, settings)}</span>,
     },
     { label: 'Specializations', render: (r) => r.technician.specializations.map((s) => s.name).join(', ') },
-    { label: 'Experience', render: (r) => (r.technician.years_experience ? `${r.technician.years_experience} years` : '—') },
+    {
+      label: 'Experience',
+      render: (r) => (r.technician.years_experience ? `${r.technician.years_experience} years` : '—'),
+    },
     { label: 'Available', render: (r) => formatTimeRange(r.availability.start, r.availability.end) },
     {
       label: 'Credentials (not scored)',
       render: (r) => <CredentialsBadge items={verification[r.technician.id]} />,
     },
-    { label: '', render: (r) => <Button size="sm" onClick={() => onBook(r)}>Book {r.technician.full_name.split(' ')[0]}</Button> },
+    {
+      label: '',
+      render: (r) => (
+        <Button size="sm" onClick={() => onBook(r)}>
+          Book {r.technician.full_name.split(' ')[0]}
+        </Button>
+      ),
+    },
   ];
 
   return (
-    <Modal open onClose={onClose} title="Compare technicians" description="Side by side. Higher score ranks first; ties go to the nearer technician." size="xl">
+    <Modal
+      open
+      onClose={onClose}
+      title="Compare technicians"
+      description="Side by side. Higher score ranks first; ties go to the nearer technician."
+      size="xl"
+    >
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-sm">
           <caption className="sr-only">Comparison of selected technicians</caption>

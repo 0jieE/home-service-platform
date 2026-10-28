@@ -8,7 +8,11 @@ import { useCustomerMe } from '@/api/auth';
 import { useCreateBooking } from '@/api/bookings';
 import { useConfigValues } from '@/api/config';
 import { useTechnician, useTechnicianAvailability } from '@/api/technicians';
-import { LocationPicker, OUTSIDE_COVERAGE_MESSAGE, type CoverageStatus } from '@/components/map/LocationPicker';
+import {
+  LocationPicker,
+  OUTSIDE_COVERAGE_MESSAGE,
+  type CoverageStatus,
+} from '@/components/map/LocationPicker';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/EmptyState';
@@ -44,7 +48,18 @@ export function BookPage() {
     getValues,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<BookingFormValues, unknown, { category_id: number; date: string; time: string; location: { lat: number; lng: number } | null; address: string; notes: string }>({
+  } = useForm<
+    BookingFormValues,
+    unknown,
+    {
+      category_id: number;
+      date: string;
+      time: string;
+      location: { lat: number; lng: number } | null;
+      address: string;
+      notes: string;
+    }
+  >({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
       category_id: undefined,
@@ -73,7 +88,10 @@ export function BookPage() {
 
   const date = watch('date');
   const daySlots = useMemo(
-    () => (availability.data?.slots ?? []).filter((s) => s.state === 'available' && manilaDateOf(s.start) === date),
+    () =>
+      (availability.data?.slots ?? []).filter(
+        (s) => s.state === 'available' && manilaDateOf(s.start) === date,
+      ),
     [availability.data, date],
   );
   const dayReserved = useMemo(
@@ -82,7 +100,8 @@ export function BookPage() {
   );
 
   if (tech.isLoading) return <FullPageSpinner />;
-  if (tech.isError || !tech.data) return <ErrorState message={errorMessage(tech.error)} onRetry={() => tech.refetch()} />;
+  if (tech.isError || !tech.data)
+    return <ErrorState message={errorMessage(tech.error)} onRetry={() => tech.refetch()} />;
   const t = tech.data;
 
   const onSubmit = handleSubmit(async (v) => {
@@ -105,7 +124,14 @@ export function BookPage() {
       toast.success(`Request sent to ${t.full_name}. You'll be notified when they respond.`);
       navigate(`/c/bookings/${booking.id}`);
     } catch (err) {
-      setFormError(applyApiErrors(err, setError, FIELDS, { start: 'time', end: 'time', category: 'category_id', technician_id: 'category_id' }));
+      setFormError(
+        applyApiErrors(err, setError, FIELDS, {
+          start: 'time',
+          end: 'time',
+          category: 'category_id',
+          technician_id: 'category_id',
+        }),
+      );
     }
   });
 
@@ -117,13 +143,19 @@ export function BookPage() {
       <PageHeader
         title={`Book ${t.full_name}`}
         back={
-          <Link to={`/c/technicians/${t.id}`} className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900">
+          <Link
+            to={`/c/technicians/${t.id}`}
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
+          >
             <ArrowLeft className="size-4" /> Back to profile
           </Link>
         }
       />
       <Instructions title="Before you book">
-        <p>Pick a time inside one of the technician’s free periods. The request is reserved only after the technician accepts.</p>
+        <p>
+          Pick a time inside one of the technician’s free periods. The request is reserved only after the
+          technician accepts.
+        </p>
       </Instructions>
       <Card>
         <CardBody>
@@ -173,11 +205,16 @@ export function BookPage() {
                     <span className="font-medium text-emerald-800">Free on this day: </span>
                     {daySlots.map((s) => formatTimeRange(s.start, s.end)).join(', ')}
                     {dayReserved.length > 0 && (
-                      <span className="text-slate-500"> · already booked: {dayReserved.map((s) => formatTimeRange(s.start, s.end)).join(', ')}</span>
+                      <span className="text-slate-500">
+                        {' '}
+                        · already booked: {dayReserved.map((s) => formatTimeRange(s.start, s.end)).join(', ')}
+                      </span>
                     )}
                   </>
                 ) : (
-                  <span className="text-amber-800">No free time recorded for this day. Choose another date.</span>
+                  <span className="text-amber-800">
+                    No free time recorded for this day. Choose another date.
+                  </span>
                 )}
               </div>
             </div>
@@ -186,7 +223,9 @@ export function BookPage() {
               required
               value={location ? { ...location, address: address ?? '' } : null}
               onChange={(v) => {
-                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, { shouldValidate: !!errors.location });
+                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, {
+                  shouldValidate: !!errors.location,
+                });
                 setValue('address', v?.address ?? '', { shouldValidate: !!errors.address });
               }}
               onCoverageChange={setCoverage}
@@ -194,7 +233,12 @@ export function BookPage() {
               addressError={errors.address?.message}
             />
 
-            <Textarea label="Notes for the technician (optional)" placeholder="Describe the problem" error={errors.notes?.message} {...register('notes')} />
+            <Textarea
+              label="Notes for the technician (optional)"
+              placeholder="Describe the problem"
+              error={errors.notes?.message}
+              {...register('notes')}
+            />
             <FormError message={formError} />
             <Button type="submit" size="lg" loading={isSubmitting} disabled={coverage === 'outside'}>
               Send booking request

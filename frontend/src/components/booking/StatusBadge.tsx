@@ -36,7 +36,9 @@ export function BookingStatusBadges({ booking }: { booking: Booking }) {
           {booking.dispute.status === 'open' ? 'Dispute open' : 'Dispute resolved'}
         </Badge>
       )}
-      {booking.status === 'pending' && booking.conflicts_with_reserved && <Badge tone="red">Time conflict</Badge>}
+      {booking.status === 'pending' && booking.conflicts_with_reserved && (
+        <Badge tone="red">Time conflict</Badge>
+      )}
     </span>
   );
 }

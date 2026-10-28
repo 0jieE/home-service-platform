@@ -38,7 +38,12 @@ export function Instructions({
   className?: string;
 }) {
   return (
-    <div className={cn('mb-5 flex gap-3 rounded-xl border border-brand-100 bg-brand-50/70 p-4 text-sm text-slate-700', className)}>
+    <div
+      className={cn(
+        'mb-5 flex gap-3 rounded-xl border border-brand-100 bg-brand-50/70 p-4 text-sm text-slate-700',
+        className,
+      )}
+    >
       <Info className="mt-0.5 size-5 shrink-0 text-brand-700" aria-hidden="true" />
       <div>
         <p className="font-semibold text-brand-900">{title}</p>

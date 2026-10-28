@@ -107,7 +107,9 @@ function MapPickerSurface({
         )}
         <PanTo target={geoTarget} zoom={15} />
       </BaseMap>
-      <p className="text-xs text-slate-500">Tip: click the map to place the pin, or drag the pin to adjust it.</p>
+      <p className="text-xs text-slate-500">
+        Tip: click the map to place the pin, or drag the pin to adjust it.
+      </p>
     </div>
   );
 }
@@ -148,7 +150,11 @@ export function LocationPicker({
   const lng = value?.lng;
   const hasPoint = lat !== undefined && lng !== undefined && isValidPoint({ lat, lng });
   const pointKey = hasPoint ? `${lat},${lng}` : '';
-  const coverage: CoverageStatus = !hasPoint ? 'none' : checked?.key === pointKey ? checked.status : 'checking';
+  const coverage: CoverageStatus = !hasPoint
+    ? 'none'
+    : checked?.key === pointKey
+      ? checked.status
+      : 'checking';
 
   useEffect(() => {
     if (!pointKey) return;
@@ -156,7 +162,11 @@ export function LocationPicker({
     const seq = ++checkSeq.current;
     const handle = setTimeout(() => {
       checkCoverage({ lat: la, lng: ln })
-        .then((r) => seq === checkSeq.current && setChecked({ key: pointKey, status: r.inside ? 'inside' : 'outside' }))
+        .then(
+          (r) =>
+            seq === checkSeq.current &&
+            setChecked({ key: pointKey, status: r.inside ? 'inside' : 'outside' }),
+        )
         .catch(() => seq === checkSeq.current && setChecked({ key: pointKey, status: 'error' }));
     }, 250);
     return () => clearTimeout(handle);
@@ -307,7 +317,10 @@ export function CoverageNotice({ status }: { status: CoverageStatus }) {
     },
   }[status];
   return (
-    <p role={status === 'outside' ? 'alert' : 'status'} className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', map.cls)}>
+    <p
+      role={status === 'outside' ? 'alert' : 'status'}
+      className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', map.cls)}
+    >
       {map.icon}
       {map.text}
     </p>
@@ -335,7 +348,8 @@ function ManualCoordinates({
   return (
     <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
       <p className="mb-3 text-sm text-slate-600">
-        The map is unavailable. Enter the coordinates manually (Kidapawan City center is {cityCenter.lat}, {cityCenter.lng}).
+        The map is unavailable. Enter the coordinates manually (Kidapawan City center is {cityCenter.lat},{' '}
+        {cityCenter.lng}).
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <Input

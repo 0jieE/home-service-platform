@@ -24,7 +24,15 @@ export function useMapsEnabled() {
   return useContext(MapsEnabledContext);
 }
 
-function StatusGate({ children, fallback, className }: { children: ReactNode; fallback?: ReactNode; className?: string }) {
+function StatusGate({
+  children,
+  fallback,
+  className,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+  className?: string;
+}) {
   const status = useApiLoadingStatus();
   if (status === APILoadingStatus.FAILED || status === APILoadingStatus.AUTH_FAILURE) {
     return (
@@ -46,7 +54,15 @@ function StatusGate({ children, fallback, className }: { children: ReactNode; fa
 }
 
 /** Renders children only when maps can be used; otherwise a clear inline message (or `fallback`). */
-export function MapsGate({ children, fallback, className }: { children: ReactNode; fallback?: ReactNode; className?: string }) {
+export function MapsGate({
+  children,
+  fallback,
+  className,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+  className?: string;
+}) {
   const enabled = useMapsEnabled();
   if (!enabled) {
     return (

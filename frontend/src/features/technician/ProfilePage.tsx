@@ -5,7 +5,11 @@ import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCategories } from '@/api/categories';
 import { useTechMe, useUpdateTechMe } from '@/api/technicians';
-import { LocationPicker, OUTSIDE_COVERAGE_MESSAGE, type CoverageStatus } from '@/components/map/LocationPicker';
+import {
+  LocationPicker,
+  OUTSIDE_COVERAGE_MESSAGE,
+  type CoverageStatus,
+} from '@/components/map/LocationPicker';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { ErrorState } from '@/components/ui/EmptyState';
@@ -48,7 +52,14 @@ export function TechnicianProfilePage() {
     formState: { errors, isSubmitting, isDirty },
   } = useForm<TechnicianProfileValues, unknown, Out>({
     resolver: zodResolver(technicianProfileSchema),
-    defaultValues: { bio: '', phone: '', years_experience: 0, address: '', location: null, service_category_ids: [] },
+    defaultValues: {
+      bio: '',
+      phone: '',
+      years_experience: 0,
+      address: '',
+      location: null,
+      service_category_ids: [],
+    },
   });
 
   useEffect(() => {
@@ -64,7 +75,8 @@ export function TechnicianProfilePage() {
   }, [me.data, reset]);
 
   if (me.isLoading) return <FullPageSpinner />;
-  if (me.isError || !me.data) return <ErrorState message={errorMessage(me.error)} onRetry={() => me.refetch()} />;
+  if (me.isError || !me.data)
+    return <ErrorState message={errorMessage(me.error)} onRetry={() => me.refetch()} />;
   const missing = me.data.missing_fields ?? [];
 
   const onSubmit = handleSubmit(async (v) => {
@@ -78,7 +90,12 @@ export function TechnicianProfilePage() {
       await refreshUser();
       toast.success('Profile saved.');
     } catch (err) {
-      setFormError(applyApiErrors(err, setError, FIELDS, { specializations: 'service_category_ids', services: 'service_category_ids' }));
+      setFormError(
+        applyApiErrors(err, setError, FIELDS, {
+          specializations: 'service_category_ids',
+          services: 'service_category_ids',
+        }),
+      );
     }
   });
 
@@ -92,16 +109,23 @@ export function TechnicianProfilePage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="My technician profile" description="What customers see, and where you operate from." />
+      <PageHeader
+        title="My technician profile"
+        description="What customers see, and where you operate from."
+      />
       <Instructions title="Profile rules">
         <p>
-          You can edit your bio, phone, experience, specializations and operating location. Your name and credentials
-          are managed by the administrator. Your operating location must be inside Kidapawan City — distances to
-          customers are measured from it (straight-line).
+          You can edit your bio, phone, experience, specializations and operating location. Your name and
+          credentials are managed by the administrator. Your operating location must be inside Kidapawan City
+          — distances to customers are measured from it (straight-line).
         </p>
       </Instructions>
       {missing.length > 0 ? (
-        <Alert tone="amber" icon={<AlertTriangle className="size-5" />} title="Incomplete — you don’t appear in recommendations yet">
+        <Alert
+          tone="amber"
+          icon={<AlertTriangle className="size-5" />}
+          title="Incomplete — you don’t appear in recommendations yet"
+        >
           Missing: {missing.map(titleCase).join(', ')}.
         </Alert>
       ) : (
@@ -115,7 +139,13 @@ export function TechnicianProfilePage() {
         <CardBody>
           <form onSubmit={onSubmit} className="space-y-6" noValidate>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input label="Mobile number" type="tel" required error={errors.phone?.message} {...register('phone')} />
+              <Input
+                label="Mobile number"
+                type="tel"
+                required
+                error={errors.phone?.message}
+                {...register('phone')}
+              />
               <Input
                 label="Years of experience"
                 type="number"
@@ -149,10 +179,14 @@ export function TechnicianProfilePage() {
                       <Checkbox
                         key={c.id}
                         label={c.name}
-                        description={c.is_active === false ? 'Inactive — not shown in new searches' : undefined}
+                        description={
+                          c.is_active === false ? 'Inactive — not shown in new searches' : undefined
+                        }
                         checked={field.value.includes(c.id)}
                         onChange={(e) =>
-                          field.onChange(e.target.checked ? [...field.value, c.id] : field.value.filter((x) => x !== c.id))
+                          field.onChange(
+                            e.target.checked ? [...field.value, c.id] : field.value.filter((x) => x !== c.id),
+                          )
                         }
                       />
                     ))}
@@ -171,8 +205,14 @@ export function TechnicianProfilePage() {
               required
               value={loc ? { ...loc, address: addr } : null}
               onChange={(v) => {
-                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, { shouldDirty: true, shouldValidate: !!errors.location });
-                setValue('address', v?.address ?? '', { shouldDirty: true, shouldValidate: !!errors.address });
+                setValue('location', v ? { lat: v.lat, lng: v.lng } : null, {
+                  shouldDirty: true,
+                  shouldValidate: !!errors.location,
+                });
+                setValue('address', v?.address ?? '', {
+                  shouldDirty: true,
+                  shouldValidate: !!errors.address,
+                });
               }}
               onCoverageChange={setCoverage}
               error={errors.location?.message}
