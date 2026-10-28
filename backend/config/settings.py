@@ -155,6 +155,7 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "apps.accounts.exceptions.api_exception_handler",
     "DEFAULT_THROTTLE_RATES": {"auth": env("AUTH_THROTTLE_RATE", "30/min")},
     "DATETIME_FORMAT": "iso-8601",
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 SIMPLE_JWT = {
@@ -174,6 +175,14 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
     "SCHEMA_PATH_PREFIX": "/api",
+    "ENUM_NAME_OVERRIDES": {
+        "BookingStatusEnum": "apps.bookings.models.BookingStatus",
+        "ApplicationStatusEnum": "apps.applications.models.ApplicationStatus",
+        "AvailabilityStateEnum": "apps.technicians.models.AvailabilityState",
+        "ActorRoleEnum": "apps.bookings.models.ActorRole",
+        "DisputeStatusEnum": "apps.bookings.models.DisputeStatus",
+        "RoleEnum": "apps.accounts.models.Role",
+    },
 }
 
 # --- Channels / Celery ----------------------------------------------------

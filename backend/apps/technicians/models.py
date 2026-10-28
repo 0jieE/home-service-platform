@@ -68,6 +68,10 @@ class TechnicianProfile(models.Model):
     def full_name(self) -> str:
         return self.user.full_name
 
+    def active_categories(self):
+        """Uses the prefetched services when available (services__category)."""
+        return [s.category for s in self.services.all() if s.category.is_active]
+
     @property
     def missing_fields(self) -> list[str]:
         missing = []
@@ -75,7 +79,7 @@ class TechnicianProfile(models.Model):
             missing.append("location")
         if not self.phone:
             missing.append("phone")
-        if not self.services.filter(category__is_active=True).exists():
+        if not self.active_categories():
             missing.append("service_categories")
         return missing
 

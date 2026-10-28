@@ -54,6 +54,11 @@ def to_multipolygon(doc: dict) -> MultiPolygon:
 class Command(BaseCommand):
     help = "Load a GeoJSON boundary and make it the single active coverage area."
 
+    def create_parser(self, prog_name, subcommand, **kwargs):
+        # Our --version (boundary version) replaces Django's built-in --version flag.
+        kwargs.setdefault("conflict_handler", "resolve")
+        return super().create_parser(prog_name, subcommand, **kwargs)
+
     def add_arguments(self, parser):
         parser.add_argument("file", help="Path to a .geojson file (Feature, FeatureCollection or geometry)")
         parser.add_argument("--name", required=True)
