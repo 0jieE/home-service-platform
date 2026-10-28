@@ -19,6 +19,11 @@ export const ERROR_COPY: Record<ErrorCode, string> = {
   account_exists: 'An account already exists for this application or email.',
   invalid_activation:
     'The email or activation code is invalid or has expired. Ask the administrator for a new code.',
+  // additive codes (docs/CONTRACT_CHANGES.md 2026-10-29 02:50)
+  account_not_approved: 'This technician account is not approved or not activated yet.',
+  permission_denied: 'You do not have permission to do that.',
+  settings_frozen: 'Recommendation settings are frozen. Unfreeze them first.',
+  cannot_deactivate_self: 'You cannot deactivate your own account.',
 };
 
 export interface ApiErrorInfo {

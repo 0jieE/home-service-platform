@@ -33,7 +33,7 @@ npm run e2e            # Playwright (backend up + seeded); first time: npx playw
   3. Admin records application → adds verification → approves → creates account (code shown once) → technician activates at `/activate` → logs in → sees the incomplete-profile banner.
   4. Admin dashboard renders 3 charts + top technicians; admin resolves the seeded open dispute (skips with a message once no open dispute is left — re-run `seed_demo`).
 - Every screen for every role was loaded at 1280 px and 375 px with zero console errors, zero failed API calls and no horizontal overflow.
-- `git grep AIza` on tracked files: nothing.
+- A search of tracked files for the Google API key prefix finds nothing.
 
 ## Versions (exact, pinned in package.json)
 Runtime: react 19.3.1, react-dom 19.3.1, react-router 7.18.5, @tanstack/react-query 5.105.0 (+ devtools 5.105.0, dev only), axios 1.21.0, react-hook-form 7.91.0, zod 4.6.7, @hookform/resolvers 6.0.2, recharts 3.10.1, @vis.gl/react-google-maps 1.10.1, lucide-react 1.63.0, date-fns 4.4.0, date-fns-tz 3.2.0, clsx 2.1.1, sonner 2.0.8.
@@ -64,6 +64,7 @@ None blocking. Backend extras beyond contract v1 that the UI uses or tolerates:
 - Application `rejection_reason` is `""`, not `null`, when there is none (handled).
 - `rating_avg` is `null` with no reviews (CONTRACT_CHANGES, handled as “No ratings yet”).
 - The backend re-seeded during the session (IDs changed); nothing in the UI hard-codes IDs.
+- Adapted to CONTRACT_CHANGES 2026-10-29 02:50: extra error codes (`account_not_approved`, `permission_denied`, `settings_frozen`, `cannot_deactivate_self`) have friendly copy; `missing_fields: "service_categories"` is labelled; new `POST /admin/applications/{id}/reissue-code/` is exposed as “Reissue activation code” on accounts not yet activated (code shown once, like create-account).
 
 ## Known gaps
 - The DoD walkthrough's “start” step can't happen for a booking tomorrow at 9:00: the backend allows start only within `START_EARLY_MINUTES` (60) of the start time. The e2e covers the full lifecycle with a booking starting within the next 30 minutes on a slot it creates through the API.

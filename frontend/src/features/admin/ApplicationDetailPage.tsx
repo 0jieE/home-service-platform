@@ -21,6 +21,7 @@ import {
   useApplication,
   useApproveApplication,
   useCreateTechnicianAccount,
+  useReissueActivationCode,
   useRejectApplication,
   useUpdateApplication,
 } from '@/api/admin';
@@ -45,7 +46,8 @@ export function ApplicationDetailPage() {
   const reject = useRejectApplication();
   const update = useUpdateApplication();
   const createAccount = useCreateTechnicianAccount();
-  const [dialog, setDialog] = useState<'approve' | 'reject' | 'account' | null>(null);
+  const reissue = useReissueActivationCode();
+  const [dialog, setDialog] = useState<'approve' | 'reject' | 'account' | 'reissue' | null>(null);
   const [dialogError, setDialogError] = useState<string | null>(null);
   const [showVerify, setShowVerify] = useState(false);
   const [account, setAccount] = useState<CreateAccountResponse | null>(null);
@@ -140,6 +142,15 @@ export function ApplicationDetailPage() {
             {a.status === 'approved' && !a.account_created && (
               <Button icon={<KeyRound className="size-4" />} onClick={() => setDialog('account')}>
                 Create technician account
+              </Button>
+            )}
+            {a.account_created && (
+              <Button
+                variant="outline"
+                icon={<KeyRound className="size-4" />}
+                onClick={() => setDialog('reissue')}
+              >
+                Reissue activation code
               </Button>
             )}
             {a.status !== 'rejected' && (
@@ -263,6 +274,21 @@ export function ApplicationDetailPage() {
             const res = await createAccount.mutateAsync(a.id);
             setAccount(res);
           }, 'Technician account created.')
+        }
+      />
+      <ConfirmDialog
+        open={dialog === 'reissue'}
+        title="Issue a new activation code?"
+        description="Only for an account that has not been activated yet (e.g. the code expired or was lost). Any earlier unused code stops working."
+        confirmLabel="Issue new code"
+        loading={reissue.isPending}
+        error={dialogError}
+        onClose={close}
+        onConfirm={() =>
+          void run(async () => {
+            const res = await reissue.mutateAsync(a.id);
+            setAccount(res);
+          }, 'New activation code issued.')
         }
       />
       {showVerify && <VerificationModal applicationId={a.id} onClose={() => setShowVerify(false)} />}

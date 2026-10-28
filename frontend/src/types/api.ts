@@ -42,7 +42,12 @@ export type ErrorCode =
   | 'profile_incomplete'
   | 'application_not_approved'
   | 'account_exists'
-  | 'invalid_activation';
+  | 'invalid_activation'
+  // additive (CONTRACT_CHANGES)
+  | 'account_not_approved'
+  | 'permission_denied'
+  | 'settings_frozen'
+  | 'cannot_deactivate_self';
 
 export const BOOKING_STATUSES: BookingStatus[] = [
   'pending',

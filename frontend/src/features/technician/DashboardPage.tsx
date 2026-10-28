@@ -15,6 +15,7 @@ import { manilaDateOf, manilaDateString, titleCase } from '@/lib/format';
 const FIELD_LABEL: Record<string, string> = {
   location: 'operating location (map pin)',
   services: 'at least one specialization',
+  service_categories: 'at least one specialization',
   service_category_ids: 'at least one specialization',
   specializations: 'at least one specialization',
   phone: 'phone number',

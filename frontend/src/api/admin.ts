@@ -158,6 +158,16 @@ export function useRejectApplication() {
   });
 }
 
+/** New code for an account that has not been activated yet (CONTRACT_CHANGES); old unused codes stop working. */
+export async function reissueActivationCode(id: number): Promise<CreateAccountResponse> {
+  const { data } = await api.post<CreateAccountResponse>(`/admin/applications/${id}/reissue-code/`, {});
+  return data;
+}
+
+export function useReissueActivationCode() {
+  return useMutation({ mutationFn: reissueActivationCode });
+}
+
 export function useCreateTechnicianAccount() {
   const invalidate = useInvalidateApplications();
   const qc = useQueryClient();
