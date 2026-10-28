@@ -91,8 +91,7 @@ def tech_email(i: int) -> str:
     return f"tech{i + 1}@demo.local"
 
 
-DEMO_EMAILS = [ADMIN[0]] + [c[0] for c in CUSTOMERS] + [tech_email(i) for i in range(len(TECHNICIANS))]
-EXTRA_EMAILS = [a[2] for a in EXTRA_APPLICATIONS]
+DEMO_DOMAIN = "@demo.local"
 
 
 def at(day, hour, minute=0):
@@ -140,7 +139,8 @@ class Command(BaseCommand):
     # --- pieces -------------------------------------------------------------
 
     def _reset(self):
-        users = User.objects.filter(email__in=DEMO_EMAILS + EXTRA_EMAILS)
+        # Every *@demo.local account (seed, extra applicants, smoke-test technicians).
+        users = User.objects.filter(email__endswith=DEMO_DOMAIN)
         bookings = Booking.objects.filter(customer__in=users) | Booking.objects.filter(technician__user__in=users)
         ids = list(bookings.values_list("id", flat=True))
         BookingStatusHistory.objects.filter(booking_id__in=ids).delete()
@@ -151,7 +151,7 @@ class Command(BaseCommand):
         app_ids = list(profiles.exclude(application=None).values_list("application_id", flat=True))
         profiles.delete()
         TechnicianApplication.objects.filter(id__in=app_ids).delete()
-        TechnicianApplication.objects.filter(email__in=DEMO_EMAILS + EXTRA_EMAILS).delete()
+        TechnicianApplication.objects.filter(email__endswith=DEMO_DOMAIN).delete()
         users.delete()
         RecommendationSettings.objects.filter(pk=1).update(w_p=0.5, w_r=0.5, d0_km=1.0, no_rating_q=0.5, version=1, is_frozen=False)
         self.stdout.write("Demo data removed.")
