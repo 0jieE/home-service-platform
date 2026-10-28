@@ -1,4 +1,4 @@
-STATUS: IN PROGRESS — API READY: partial (health/auth/categories up at http://localhost:8000/api)
+STATUS: IN PROGRESS — API READY: yes, seeded (http://localhost:8000/api, docs at /api/docs/)
 
 # Backend status
 
