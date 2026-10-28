@@ -1,0 +1,71 @@
+# Service Platform — local stack (PostGIS, Redis, Django/Channels web, Celery worker + beat).
+# Host DB port defaults to 5436 because 5432/5433 are used by local PostgreSQL installs on the
+# dev machine; override with DB_HOST_PORT in a root .env file if needed.
+
+x-backend: &backend
+  build: ./backend
+  image: service-platform-backend
+  env_file:
+    - path: ./backend/.env
+      required: false
+  environment:
+    DB_HOST: db
+    DB_PORT: "5432"
+    REDIS_URL: redis://redis:6379/0
+  volumes:
+    - ./backend:/app
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  restart: unless-stopped
+
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: service_platform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Asia/Manila
+    ports:
+      - "${DB_HOST_PORT:-5436}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d service_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  web:
+    <<: *backend
+    # runserver serves ASGI (Channels) because daphne is first in INSTALLED_APPS, and reloads on change.
+    # Production-style alternative: daphne -b 0.0.0.0 -p 8000 config.asgi:application
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+  worker:
+    <<: *backend
+    command: celery -A config worker -l info --concurrency=2
+
+  beat:
+    <<: *backend
+    command: celery -A config beat -l info --schedule /tmp/celerybeat-schedule
+
+volumes:
+  pgdata:
