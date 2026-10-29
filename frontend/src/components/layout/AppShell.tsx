@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { LogOut, MapPin, MoreHorizontal, X } from 'lucide-react';
 import { useAdminStats } from '@/api/admin';
@@ -125,7 +125,9 @@ export function AppShell({ role }: { role: Role }) {
   const items = NAV[role];
   const badges = useBadges(role);
   const primary = items.filter((i) => i.primary).slice(0, 5);
-  const hasMore = items.length > primary.length;
+  const overflow = items.filter((i) => !primary.includes(i));
+  const hasMore = overflow.length > 0;
+  const onOverflowPage = overflow.some((i) => location.pathname.startsWith(i.to));
   const name = user?.full_name || user?.email || '';
 
   // Close the drawer on navigation (state adjusted during render, not in an effect).
@@ -134,6 +136,14 @@ export function AppShell({ role }: { role: Role }) {
     setLastPath(location.pathname);
     if (drawer) setDrawer(false);
   }
+
+  // Escape closes the "More" sheet.
+  useEffect(() => {
+    if (!drawer) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setDrawer(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [drawer]);
 
   const onLogout = async () => {
     await logout();
@@ -252,9 +262,19 @@ export function AppShell({ role }: { role: Role }) {
               <button
                 type="button"
                 onClick={() => setDrawer(true)}
-                className="flex min-h-16 w-full flex-col items-center justify-center gap-1 text-xs font-medium text-slate-500"
+                aria-haspopup="dialog"
+                aria-expanded={drawer}
+                className={cn(
+                  'flex min-h-16 w-full flex-col items-center justify-center gap-1 text-xs font-medium',
+                  onOverflowPage || drawer ? 'text-brand-800' : 'text-slate-500',
+                )}
               >
-                <span className="flex h-7 w-12 items-center justify-center">
+                <span
+                  className={cn(
+                    'flex h-7 w-12 items-center justify-center rounded-full transition-colors',
+                    (onOverflowPage || drawer) && 'bg-brand-100',
+                  )}
+                >
                   <MoreHorizontal className="size-5" aria-hidden="true" />
                 </span>
                 More
@@ -264,32 +284,67 @@ export function AppShell({ role }: { role: Role }) {
         </ul>
       </nav>
 
-      {/* Mobile drawer */}
+      {/* Mobile "More" sheet: the pages that don't fit in the bottom bar */}
       {drawer && (
-        <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+        <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label="More pages">
           <div
-            className="absolute inset-0 bg-pine-950/60"
+            className="absolute inset-0 animate-fade-in bg-pine-950/50"
             onClick={() => setDrawer(false)}
             aria-hidden="true"
           />
-          <div className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-pine-900 shadow-2xl">
-            <div className="flex h-20 items-center justify-between gap-2 border-b border-white/10 px-4">
-              <UserBlock name={name} role={role} />
+          <div className="absolute inset-x-0 bottom-0 max-h-[85dvh] animate-sheet-up overflow-y-auto rounded-t-3xl bg-white pb-[calc(env(safe-area-inset-bottom)+1rem)] shadow-[0_-12px_40px_-12px_rgb(11_29_21/0.35)]">
+            <div className="mx-auto mt-2.5 h-1.5 w-10 rounded-full bg-slate-200" aria-hidden="true" />
+            <div className="flex items-center justify-between gap-3 px-5 pt-3 pb-2">
+              <div className="min-w-0">
+                <h2 className="text-xl font-bold">More</h2>
+                <p className="truncate text-sm text-slate-500">
+                  {name} ({ROLE_LABEL[role]})
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => setDrawer(false)}
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-white/80 hover:bg-white/10 focus-visible:outline-sun-400"
-                aria-label="Close menu"
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200"
+                aria-label="Close"
+                autoFocus
               >
-                <X className="size-6" />
+                <X className="size-5" />
               </button>
             </div>
-            <nav aria-label="Main" className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-              {navList(() => setDrawer(false))}
+            <nav aria-label="More pages" className="px-4 pt-2">
+              <ul className="grid grid-cols-2 gap-2.5">
+                {overflow.map((item) => {
+                  const Icon = item.icon;
+                  const badge = item.badgeKey ? badges[item.badgeKey] : 0;
+                  return (
+                    <li key={item.to}>
+                      <NavLink
+                        to={item.to}
+                        onClick={() => setDrawer(false)}
+                        className={({ isActive }) =>
+                          cn(
+                            'flex min-h-14 items-center gap-3 rounded-2xl border px-3 py-3 text-[0.95rem] font-semibold transition-colors',
+                            isActive
+                              ? 'border-brand-300 bg-brand-50 text-brand-900'
+                              : 'border-slate-200 text-slate-800 hover:border-brand-300 hover:bg-brand-50/60',
+                          )
+                        }
+                      >
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-brand-800">
+                          <Icon className="size-5" aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1 leading-tight">{item.label}</span>
+                        {badge > 0 && (
+                          <span className="rounded-full bg-red-600 px-1.5 text-xs leading-5 font-bold text-white">
+                            {badge}
+                          </span>
+                        )}
+                      </NavLink>
+                    </li>
+                  );
+                })}
+              </ul>
             </nav>
-            <div className="border-t border-white/10 px-5 py-4">
-              <LiveIndicator />
-            </div>
           </div>
         </div>
       )}
