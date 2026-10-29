@@ -1,6 +1,7 @@
 import axios, { AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { env } from './env';
 import { tokenStorage } from '@/auth/tokenStorage';
+import { reportApiReachable } from './connectivity';
 
 /** Main client: attaches the access token and transparently refreshes on 401. */
 export const api = axios.create({
@@ -26,6 +27,11 @@ export function setAuthFailureHandler(handler: (() => void) | null) {
 
 let refreshPromise: Promise<string> | null = null;
 
+/** True when the request never got an HTTP response (offline, DNS, CORS/network failure). */
+export function isNetworkError(err: unknown): boolean {
+  return axios.isAxiosError(err) && !err.response;
+}
+
 /**
  * Single-flight refresh: concurrent callers share one POST /auth/token/refresh/.
  * Rotation is on, so the returned refresh token replaces the old one.
@@ -41,14 +47,32 @@ export function refreshAccessToken(): Promise<string> {
       return data.access;
     })
     .catch((err: unknown) => {
-      tokenStorage.clear();
-      onAuthFailure?.();
+      // Only a server rejection ends the session. With no connection (no response) the refresh
+      // token is kept, so an installed app opened offline is still signed in once back online.
+      if (!isNetworkError(err)) {
+        tokenStorage.clear();
+        onAuthFailure?.();
+      }
       throw err;
     })
     .finally(() => {
       refreshPromise = null;
     });
   return refreshPromise;
+}
+
+// Feed the offline banner: any HTTP response means the API is reachable; none means it isn't.
+for (const client of [api, authClient]) {
+  client.interceptors.response.use(
+    (res) => {
+      reportApiReachable(true);
+      return res;
+    },
+    (error: unknown) => {
+      reportApiReachable(!isNetworkError(error));
+      return Promise.reject(error);
+    },
+  );
 }
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {

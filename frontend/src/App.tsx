@@ -6,6 +6,7 @@ import { AuthProvider } from '@/auth/AuthProvider';
 import { MapsProvider } from '@/components/map/MapsProvider';
 import { env } from '@/lib/env';
 import { queryClient } from '@/lib/queryClient';
+import { OfflineBanner, PwaUpdater } from '@/pwa/PwaStatus';
 import { router } from './router';
 
 const Devtools = env.isDev
@@ -21,6 +22,8 @@ export default function App() {
         </MapsProvider>
       </AuthProvider>
       <Toaster position="top-center" richColors closeButton duration={6000} />
+      <OfflineBanner />
+      <PwaUpdater />
       <Suspense fallback={null}>
         <Devtools buttonPosition="bottom-left" />
       </Suspense>

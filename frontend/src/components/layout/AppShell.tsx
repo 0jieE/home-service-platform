@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
-import { LogOut, MapPin, MoreHorizontal, X } from 'lucide-react';
+import { Download, LogOut, MapPin, MoreHorizontal, X } from 'lucide-react';
 import { useAdminStats } from '@/api/admin';
 import { useBookings } from '@/api/bookings';
 import { useAuth } from '@/auth/useAuth';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/cn';
 import { useSocketConnected } from '@/lib/ws';
 import { initials } from '@/lib/format';
 import type { Role } from '@/types/api';
+import { InstallAppButton } from '@/pwa/InstallAppButton';
 import { NAV, ROLE_LABEL, type NavItem } from './nav';
 
 function useBadges(role: Role) {
@@ -182,6 +183,7 @@ export function AppShell({ role }: { role: Role }) {
           {navList()}
         </nav>
         <div className="space-y-4 border-t border-white/10 px-5 py-5">
+          <InstallAppButton className="-mx-2 flex min-h-10 w-[calc(100%+1rem)] items-center gap-2 rounded-lg px-2 text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white focus-visible:outline-sun-400" />
           <LiveIndicator />
           <div className="flex items-center justify-between gap-2">
             <UserBlock name={name} role={role} />
@@ -200,11 +202,17 @@ export function AppShell({ role }: { role: Role }) {
 
       <div className="min-w-0 flex-1">
         {/* Mobile / tablet top bar (navigation lives in the bottom bar; “More” opens the drawer) */}
-        <header className="sticky top-0 z-30 bg-pine-900 lg:hidden">
+        <header className="sticky top-0 z-30 bg-pine-900 pt-[env(safe-area-inset-top)] lg:hidden">
           <div className="flex h-16 items-center gap-2 pr-2 pl-4 sm:px-6">
             <Brand to={items[0]!.to} tone="dark" />
             <div className="ml-auto flex items-center gap-1">
               <LiveIndicator compact />
+              <InstallAppButton
+                title="Install app"
+                className="inline-flex size-11 items-center justify-center rounded-lg text-white/80 hover:bg-white/10 hover:text-white focus-visible:outline-sun-400"
+              >
+                <Download className="size-5" aria-hidden="true" />
+              </InstallAppButton>
               {logoutButton}
             </div>
           </div>

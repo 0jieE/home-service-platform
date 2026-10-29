@@ -3,6 +3,7 @@ import { BadgeCheck, MapPin, Ruler, ShieldCheck, Star } from 'lucide-react';
 import { buttonClasses } from '@/components/ui/Button';
 import { useConfigValues } from '@/api/config';
 import { formatWeight } from '@/lib/format';
+import { InstallAppButton } from '@/pwa/InstallAppButton';
 
 const STEPS = [
   {
@@ -51,6 +52,7 @@ export function LandingPage() {
               <Link to="/login" className={buttonClasses('onDark', 'lg')}>
                 Log in
               </Link>
+              <InstallAppButton className={buttonClasses('onDark', 'lg')} />
             </div>
             <p className="mt-6 max-w-xl text-sm text-white/60">
               Are you a technician? Apply in person at the administrator’s office. Once approved you’ll

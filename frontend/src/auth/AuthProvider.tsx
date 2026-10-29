@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { useQueryClient } from '@tanstack/react-query';
 import { getMe, logout as apiLogout, obtainToken } from '@/api/auth';
 import { qk } from '@/api/keys';
-import { refreshAccessToken, setAuthFailureHandler } from '@/lib/api';
+import { isNetworkError, refreshAccessToken, setAuthFailureHandler } from '@/lib/api';
 import type { User } from '@/types/api';
 import { AuthContext, type AuthContextValue, type AuthStatus } from './AuthContext';
 import { tokenStorage } from './tokenStorage';
@@ -35,21 +35,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!tokenStorage.getRefresh()) return;
     let cancelled = false;
-    refreshAccessToken()
-      .then(() => getMe())
-      .then((me) => {
-        if (cancelled) return;
-        qc.setQueryData(qk.me, me);
-        setUser(me);
-        setStatus('authenticated');
-      })
-      .catch(() => {
-        if (cancelled) return;
-        tokenStorage.clear();
-        setStatus('anonymous');
-      });
+    const restore = () =>
+      refreshAccessToken()
+        .then(() => getMe())
+        .then((me) => {
+          if (cancelled) return;
+          qc.setQueryData(qk.me, me);
+          setUser(me);
+          setStatus('authenticated');
+        })
+        .catch((err: unknown) => {
+          if (cancelled) return;
+          if (isNetworkError(err)) {
+            // Offline: stay "loading" (the offline banner explains why) and retry when back online.
+            window.addEventListener('online', restore, { once: true });
+            return;
+          }
+          tokenStorage.clear();
+          setStatus('anonymous');
+        });
+    restore();
     return () => {
       cancelled = true;
+      window.removeEventListener('online', restore);
     };
   }, [qc]);
 

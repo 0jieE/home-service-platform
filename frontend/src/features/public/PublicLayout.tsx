@@ -10,7 +10,7 @@ export function PublicLayout() {
   const onLanding = pathname === '/';
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="bg-pine-900">
+      <header className="bg-pine-900 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Brand tone="dark" />
           <nav className="ml-auto flex shrink-0 items-center gap-2" aria-label="Account">

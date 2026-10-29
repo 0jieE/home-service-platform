@@ -81,6 +81,16 @@ describe('auth refresh interceptor', () => {
     expect(tokenStorage.getRefresh()).toBeNull();
   });
 
+  it('keeps the session when the refresh fails for lack of a connection', async () => {
+    const onFail = vi.fn();
+    setAuthFailureHandler(onFail);
+    authClient.defaults.adapter = ((config) =>
+      Promise.reject(new AxiosError('Network Error', 'ERR_NETWORK', config))) as AxiosAdapter;
+    await expect(refreshAccessToken()).rejects.toMatchObject({ code: 'ERR_NETWORK' });
+    expect(onFail).not.toHaveBeenCalled();
+    expect(tokenStorage.getRefresh()).toBe('refresh-1');
+  });
+
   it('attaches the current access token', async () => {
     tokenStorage.setTokens('fresh-access', 'refresh-1');
     const res = await api.get('/me/');
