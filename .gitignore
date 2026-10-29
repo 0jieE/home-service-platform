@@ -1,0 +1,40 @@
+# secrets
+map_platform_api_key.txt
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+backend/media/
+backend/staticfiles/
+celerybeat-schedule*
+
+# node
+node_modules/
+frontend/dist/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# backups
+backups/
+*.dump
+
+# deploy / publishing
+backend/.env.render
+install.cmd
+docs/paper/

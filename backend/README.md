@@ -29,6 +29,15 @@ docker compose exec web python scripts/smoke.py             # end-to-end smoke r
 Demo accounts (contract §5): `admin@demo.local / Admin123!`, `customer@demo.local`, `customer2@demo.local / Customer123!`,
 `tech1@demo.local … tech10@demo.local / Tech123!`.
 
+## Production (Render)
+- `requirements.txt` = runtime only (adds `dj-database-url`, `whitenoise`); `requirements-dev.txt` adds pytest + locust.
+  docker compose builds with `REQUIREMENTS=requirements-dev.txt`; the plain `docker build` (Render) uses runtime deps.
+- `DATABASE_URL` overrides the `DB_*` variables (PostGIS engine, SSL required when `DEBUG=False`).
+  `DEBUG=False` requires `DJANGO_SECRET_KEY` and enables secure cookies / proxy SSL header / HSTS; static files via WhiteNoise
+  (collected at image build).
+- `scripts/start.sh` (Render start command): migrate, then Daphne on `$PORT` + Celery worker with embedded beat, supervised.
+- Steps and decisions: `../docs/DEPLOY.md`; Blueprint: `../render.yaml`.
+
 ## Layout
 ```
 config/            settings.py (env-driven), settings_test.py, urls.py, api_urls.py, asgi.py, celery.py

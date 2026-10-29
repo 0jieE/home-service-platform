@@ -22,6 +22,11 @@ npm run dev          # http://localhost:5173 (strictPort)
 | `npm run e2e` | Playwright smoke tests (needs backend up + `seed_demo`; starts the dev server if needed; first time: `npx playwright install chromium`) |
 | `npm run format` | Prettier |
 
+Production build (Render static site, see `../render.yaml` / `../docs/DEPLOY.md`): the `VITE_*` values above are read at
+**build time** from the environment — `VITE_API_BASE_URL=https://<api host>/api`, `VITE_WS_BASE_URL=wss://<api host>/ws`
+(a `ws://` URL is upgraded to `wss://` automatically on https pages). All routes rewrite to `/index.html`.
+Node version: `.node-version` (22.17.1).
+
 Without a Maps key the app still works: map areas show an inline message and the location picker falls back to manual latitude/longitude entry.
 
 ## Layout

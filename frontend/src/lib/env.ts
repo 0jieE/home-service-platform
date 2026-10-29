@@ -1,8 +1,14 @@
 const trimSlash = (s: string) => s.replace(/\/+$/, '');
 
+/** Browsers block ws:// from an https:// page, so upgrade a misconfigured production URL to wss://. */
+const secureWs = (url: string) =>
+  typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('ws://')
+    ? `wss://${url.slice('ws://'.length)}`
+    : url;
+
 export const env = {
   apiBaseUrl: trimSlash(import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'),
-  wsBaseUrl: trimSlash(import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000/ws'),
+  wsBaseUrl: secureWs(trimSlash(import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000/ws')),
   googleMapsApiKey: (import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '').trim(),
   googleMapsMapId: (import.meta.env.VITE_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID').trim(),
   isDev: import.meta.env.DEV,

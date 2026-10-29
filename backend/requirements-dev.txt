@@ -1,0 +1,5 @@
+# Local development / CI: runtime deps + tests + load test. docker-compose builds with this file.
+-r requirements.txt
+pytest==9.2.0
+pytest-django==4.14.0
+locust==2.47.0

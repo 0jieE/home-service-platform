@@ -3,7 +3,10 @@
 # dev machine; override with DB_HOST_PORT in a root .env file if needed.
 
 x-backend: &backend
-  build: ./backend
+  build:
+    context: ./backend
+    args:
+      REQUIREMENTS: requirements-dev.txt
   image: service-platform-backend
   env_file:
     - path: ./backend/.env

@@ -1,8 +1,12 @@
 """Django settings for the Service Platform backend (Kidapawan City technician matching)."""
 
 import os
+import socket
 from datetime import timedelta
 from pathlib import Path
+
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,9 +38,24 @@ def env_list(key: str, default: str = "") -> list[str]:
     return [item.strip() for item in env(key, default).split(",") if item.strip()]
 
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", "dev-insecure-secret-key-change-me")
+_DEV_SECRET_KEY = "dev-insecure-secret-key-change-me"
+SECRET_KEY = env("DJANGO_SECRET_KEY", _DEV_SECRET_KEY)
 DEBUG = env_bool("DEBUG", True)
 ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1,web")
+
+if not DEBUG and SECRET_KEY in {"", _DEV_SECRET_KEY}:
+    raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set when DEBUG=False.")
+
+# Render: accept the public hostname plus the container's own IP (health checks hit the container directly).
+if env("RENDER"):
+    if env("RENDER_EXTERNAL_HOSTNAME"):
+        ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
+    try:
+        ALLOWED_HOSTS.append(socket.gethostbyname(socket.gethostname()))
+    except OSError:
+        pass
+
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
 
 # Native Windows GeoDjango (OSGeo4W) only; empty inside Docker.
 if env("GDAL_LIBRARY_PATH"):
@@ -74,6 +93,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -102,18 +122,30 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": env("DB_NAME", "service_platform"),
-        "USER": env("DB_USER", "postgres"),
-        "PASSWORD": env("DB_PASSWORD", "postgres"),
-        "HOST": env("DB_HOST", "localhost"),
-        "PORT": env("DB_PORT", "5432"),
-        "CONN_MAX_AGE": 60,
-        "CONN_HEALTH_CHECKS": True,
+# DATABASE_URL (Render) wins; otherwise the DB_* variables used by local docker compose.
+if env("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.parse(
+            env("DATABASE_URL"),
+            engine="django.contrib.gis.db.backends.postgis",
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=env_bool("DB_SSL_REQUIRE", not DEBUG),
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.contrib.gis.db.backends.postgis",
+            "NAME": env("DB_NAME", "service_platform"),
+            "USER": env("DB_USER", "postgres"),
+            "PASSWORD": env("DB_PASSWORD", "postgres"),
+            "HOST": env("DB_HOST", "localhost"),
+            "PORT": env("DB_PORT", "5432"),
+            "CONN_MAX_AGE": 60,
+            "CONN_HEALTH_CHECKS": True,
+        }
+    }
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -131,6 +163,28 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# WhiteNoise serves /static/ (django-admin, Swagger UI). Hashed manifest only in production, so dev and tests
+# never need collectstatic.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        if DEBUG
+        else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
+}
+
+# --- Production security (Render terminates TLS and forwards X-Forwarded-Proto) ---
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", False)  # Render already redirects http -> https
+    SECURE_REDIRECT_EXEMPT = [r"^api/health/$"]
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(env("SECURE_HSTS_SECONDS", "3600"))
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "same-origin"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REDIS_URL = env("REDIS_URL", "redis://localhost:6379/0")

@@ -1,0 +1,72 @@
+# Render Blueprint — Home Service Technician Matching & Booking (Kidapawan City).
+# Spec: https://render.com/docs/blueprint-spec   Steps: docs/DEPLOY.md
+#
+# The PostgreSQL 17 database (db_service_platform, Singapore) already exists and is NOT created here:
+# paste its INTERNAL Database URL into DATABASE_URL when you apply the Blueprint.
+# If Render assigns hostnames other than home-service-api / home-service-web .onrender.com, update
+# CORS_ALLOWED_ORIGINS + CSRF_TRUSTED_ORIGINS (api) and VITE_API_BASE_URL + VITE_WS_BASE_URL (web, then redeploy).
+
+services:
+  # Django + Channels (Daphne) API, with a Celery worker + embedded beat in the same container (scripts/start.sh).
+  - type: web
+    name: home-service-api
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: sh scripts/start.sh
+    healthCheckPath: /api/health/
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false # INTERNAL URL of the existing Render database
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: home-service-api.onrender.com,.onrender.com,localhost,127.0.0.1
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://home-service-web.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://home-service-api.onrender.com,https://home-service-web.onrender.com
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: home-service-redis
+          property: connectionString
+      - key: BOOKING_BLOCK_MINUTES
+        value: "120"
+
+  # Redis-compatible Key Value: Channels layer + Celery broker. Empty allow list = private network only.
+  - type: keyvalue
+    name: home-service-redis
+    region: singapore
+    plan: free
+    maxmemoryPolicy: noeviction # broker/channel data must not be silently evicted
+    ipAllowList: []
+
+  # React + Vite SPA. Static sites are served from Render's global CDN (no region setting).
+  - type: web
+    name: home-service-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 22.17.1
+      - key: VITE_API_BASE_URL
+        value: https://home-service-api.onrender.com/api
+      - key: VITE_WS_BASE_URL
+        value: wss://home-service-api.onrender.com/ws
+      - key: VITE_GOOGLE_MAPS_API_KEY
+        sync: false # the Google Maps browser key (map_platform_api_key.txt)
+      - key: VITE_GOOGLE_MAPS_MAP_ID
+        value: DEMO_MAP_ID
