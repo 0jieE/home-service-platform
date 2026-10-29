@@ -55,6 +55,7 @@ Tooling: vite 8.3.5, @vitejs/plugin-react 6.1.2, typescript 6.0.3, tailwindcss 4
 - **Realtime toasts** are skipped for the user's own actions (the UI already confirms them); each toast is built after refetching the booking (the payload is never trusted as state).
 - **Weekdays** for “Generate weekly schedule”: 0 = Monday … 6 = Sunday (confirmed in CONTRACT_CHANGES).
 - **Admin charts**: single-series, one accent hue, recessive grid, hover tooltips, and a “View as table” toggle for accessibility. Bookings by category uses horizontal bars so long names stay readable; bookings per week uses straight segments (no smoothing).
+- **Admin bookings list** (`/a/bookings`, added after v1): every booking via `GET /bookings/` (admin sees all), tabs All / Active / Completed / Declined & cancelled with counts, sort by newest request or appointment time (`ordering`, CONTRACT_CHANGES). Cards show both customer and technician; the dashboard “Bookings” and “Completed bookings” tiles link here, and the admin booking detail's back link returns here.
 - **Settings page**: shows a live `w_p + w_r` check and a Table 3.3 preview. Unfreezing sends only `{is_frozen: false}`; values are edited after that.
 - **ESLint**: `react-hooks/incompatible-library` is off — the React Compiler is not used, and RHF's `watch()` is its documented API.
 

@@ -138,6 +138,10 @@ export const router = createBrowserRouter([
           },
           { path: 'disputes', element: page(() => import('@/features/admin/DisputesPage'), 'DisputesPage') },
           {
+            path: 'bookings',
+            element: page(() => import('@/features/admin/BookingsPage'), 'AdminBookingsPage'),
+          },
+          {
             path: 'bookings/:id',
             element: page(() => import('@/features/shared/BookingDetailPage'), 'BookingDetailPage'),
           },

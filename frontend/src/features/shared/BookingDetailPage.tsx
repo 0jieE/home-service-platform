@@ -30,7 +30,7 @@ import type { Booking, Role } from '@/types/api';
 const BACK: Record<Role, { to: string; label: string }> = {
   customer: { to: '/c/bookings', label: 'My bookings' },
   technician: { to: '/t/jobs', label: 'My jobs' },
-  admin: { to: '/a/disputes', label: 'Disputes' },
+  admin: { to: '/a/bookings', label: 'Bookings' },
 };
 
 function StatusGuidance({ booking, role }: { booking: Booking; role: Role }) {

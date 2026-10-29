@@ -41,6 +41,7 @@ export const NAV: Record<Role, NavItem[]> = {
   ],
   admin: [
     { to: '/a/dashboard', label: 'Dashboard', icon: LayoutDashboard, primary: true },
+    { to: '/a/bookings', label: 'Bookings', icon: CalendarCheck, primary: true },
     { to: '/a/applications', label: 'Applications', icon: FileCheck2, primary: true },
     { to: '/a/users', label: 'Users', icon: Users },
     { to: '/a/categories', label: 'Categories', icon: Tags },

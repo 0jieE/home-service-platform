@@ -42,13 +42,21 @@ export function BookingCard({
           <dt className="sr-only">When</dt>
           <dd>{formatRange(booking.start, booking.end)}</dd>
         </div>
-        <div className="flex items-center gap-2">
-          <UserRound className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
-          <dt className="sr-only">{otherLabel}</dt>
-          <dd>
-            {otherLabel}: <span className="font-medium text-slate-800">{other.full_name}</span>
-          </dd>
-        </div>
+        {(viewer === 'admin'
+          ? [
+              ['Customer', booking.customer.full_name],
+              ['Technician', booking.technician.full_name],
+            ]
+          : [[otherLabel, other.full_name]]
+        ).map(([label, name]) => (
+          <div key={label} className="flex items-center gap-2">
+            <UserRound className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+            <dt className="sr-only">{label}</dt>
+            <dd>
+              {label}: <span className="font-medium text-slate-800">{name}</span>
+            </dd>
+          </div>
+        ))}
         <div className="flex items-start gap-2">
           <MapPin className="mt-0.5 size-4 shrink-0 text-slate-400" aria-hidden="true" />
           <dt className="sr-only">Address</dt>

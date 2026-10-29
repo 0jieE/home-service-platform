@@ -18,6 +18,8 @@ export interface BookingListParams {
   upcoming?: boolean;
   page?: number;
   page_size?: number;
+  /** CONTRACT_CHANGES: start | -start | created_at | -created_at (default newest first). */
+  ordering?: 'start' | '-start' | 'created_at' | '-created_at';
 }
 
 export async function listBookings(params: BookingListParams = {}): Promise<Paginated<Booking>> {

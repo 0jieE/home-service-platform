@@ -110,11 +110,17 @@ export function AdminDashboardPage() {
               value={s.totals.pending_applications}
               to="/a/applications"
             />
-            <Kpi icon={<CalendarCheck className="size-6" />} label="Bookings" value={s.totals.bookings} />
+            <Kpi
+              icon={<CalendarCheck className="size-6" />}
+              label="Bookings"
+              value={s.totals.bookings}
+              to="/a/bookings"
+            />
             <Kpi
               icon={<ClipboardCheck className="size-6" />}
               label="Completed bookings"
               value={s.totals.completed_bookings}
+              to="/a/bookings?tab=completed"
             />
             <Kpi
               icon={<Scale className="size-6" />}
