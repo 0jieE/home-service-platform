@@ -11,7 +11,8 @@ from apps.accounts.models import CustomerProfile, Role, User
 from apps.bookings.models import Booking, BookingStatus
 from apps.catalog.models import ServiceCategory
 from apps.geo.fields import make_point
-from apps.geo.services import ensure_placeholder_area
+from apps.geo.models import PLACEHOLDER_SOURCE
+from apps.geo.services import activate_area, get_active_area, placeholder_geometry
 from apps.technicians.models import Availability, TechnicianProfile, TechnicianService
 
 POBLACION = (7.0083, 125.0894)
@@ -26,7 +27,17 @@ def _clean_cache():
 
 @pytest.fixture(autouse=True)
 def coverage(db):
-    return ensure_placeholder_area()
+    """Tests always run against the SPEC §7 placeholder box, never a real boundary file such as data/*.geojson."""
+    area = get_active_area()
+    if area is not None and area.source == PLACEHOLDER_SOURCE and area.geometry.equals(placeholder_geometry()):
+        return area
+    return activate_area(
+        name="Kidapawan City (test fixture)",
+        geometry=placeholder_geometry(),
+        source=PLACEHOLDER_SOURCE,
+        version="test",
+        verified=False,
+    )
 
 
 def tomorrow_at(hour: int, minute: int = 0, days: int = 1) -> datetime:

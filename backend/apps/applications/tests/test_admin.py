@@ -242,3 +242,20 @@ def test_load_coverage_command(tmp_path):
     active = CoverageArea.objects.get(is_active=True)
     assert active.verified and active.source == "PSA (HDX)" and not active.is_placeholder
     assert CoverageArea.objects.count() == 2
+
+
+def test_ensure_placeholder_area_never_replaces_active_area(tmp_path):
+    import json
+
+    from django.core.management import call_command
+
+    from apps.geo.models import CoverageArea
+    from apps.geo.services import ensure_placeholder_area
+
+    path = tmp_path / "city.geojson"
+    path.write_text(json.dumps({"type": "Feature", "properties": {}, "geometry": {
+        "type": "Polygon", "coordinates": [[[124.95, 6.98], [125.2, 6.98], [125.2, 7.1], [124.95, 7.1], [124.95, 6.98]]]}}))
+    call_command("load_coverage", str(path), "--name", "City of Kidapawan", "--source", "PSA PSGC", "--version", "PSGC-2026-3q")
+    real = CoverageArea.objects.get(is_active=True)
+    assert ensure_placeholder_area() == real
+    assert CoverageArea.objects.get(is_active=True) == real and CoverageArea.objects.count() == 2

@@ -18,12 +18,14 @@ From the repo root (Docker Desktop running):
 docker compose up -d --build                                  # db, redis, web, worker, beat
 docker compose exec web python manage.py migrate
 docker compose exec web python manage.py seed_demo            # --reset wipes all *@demo.local data and re-seeds
-docker compose exec web pytest                                # 133 tests, all green
+docker compose exec web pytest                                # 134 tests, all green
 docker compose exec web python scripts/smoke.py               # 62-check end-to-end run against the live API
 ```
 - API `http://localhost:8000/api/`, WS `ws://localhost:8000/ws/bookings/?token=<access>`, Django admin `/django-admin/`.
 - Postgres container on host port **5436** (5432 and 5433 are taken by local PostgreSQL installs here); `DB_HOST_PORT` in a root `.env` overrides.
 - Celery does not hot-reload: `docker compose restart worker beat` after editing tasks.
+- Real boundary (local dev, once per fresh volume — `seed_demo` keeps whatever area is active):
+  `docker compose exec web python manage.py load_coverage data/kidapawan_boundary.geojson --name "City of Kidapawan" --source "PSA PSGC boundaries via faeldon/philippines-json-maps (hires)" --version "PSGC-2026-3q"`
 - Details (coverage loading, backup/restore, load test, non-Docker fallback): `backend/README.md`.
 
 ## Verified (2026-10-29, fresh volume)
@@ -39,6 +41,16 @@ docker compose exec web python scripts/smoke.py               # 62-check end-to-
 - Backup → restore round trip with `backend/scripts/backup.sh` / `restore.sh`.
 - Locust 25 s / 20 users: 253 requests, 0 failures, recommendations median 63 ms, p95 220 ms.
 - `/api/docs/` lists all 48 paths (every contract endpoint + `reissue-code`); CORS preflight from `http://localhost:5173` OK.
+
+## Verified (2026-10-29, real boundary)
+- `load_coverage data/kidapawan_boundary.geojson` → active area "City of Kidapawan" vPSGC-2026-3q (406 vertices,
+  extent lng 124.9326–125.2250, lat 6.9723–7.1121), `verified=false`; placeholder kept as an inactive row.
+- Old seed points for Manongol (6.9850, 125.0600) and Ilomavis (7.0600, 125.1900) fell **outside** the real boundary;
+  the seed now uses 7.0218, 125.1238 and 7.0315, 125.2065, and the existing tech6/tech10 profiles were updated in place.
+- All 10 seeded approved technicians and both demo customers are inside the boundary. The six `e2e.tech.*@demo.local`
+  accounts (frontend Playwright runs) have no location, so they are never recommended — left as is.
+- `pytest`: 134 passed (the test DB always uses the placeholder fixture polygon). `GET /api/recommendations/` Plumbing at
+  7.0117, 125.0901, 2026-10-30 09:00 → 200 with 3 results (Maricel Santos, Dennis Aquino, Teodoro Lumanog).
 
 ## Versions (pinned in backend/requirements.txt)
 Python 3.12 (python:3.12-slim) · Django 5.2.18 · djangorestframework 3.18.3 · djangorestframework_simplejwt 5.5.1 ·
@@ -75,11 +87,17 @@ images `postgis/postgis:17-3.5`, `redis:7-alpine`.
 - **Seed**: technicians at approximate barangay coordinates (Poblacion, Lanao, Sudapin, Magsaysay, Balindog, Manongol,
   Singao, Amas, Paco, Ilomavis); each has an approved application + TESDA verification record; tech4 and tech7–tech10
   have no reviews; completed bookings span the last ~9 weeks for the weekly chart.
+- **Boundary file** `backend/data/kidapawan_boundary.geojson`: PSGC 1204704000, the 40 barangay polygons from
+  faeldon/philippines-json-maps (hires, PSGC 2026-3q) dissolved into one polygon. Loaded **without** `--verified` until it is
+  checked against an official PSA/NAMRIA source. `ensure_placeholder_area()` (migration/seed) never replaces an active area;
+  the test `coverage` fixture always activates its own placeholder box, independent of any data file.
+- **Seed coordinates** for Manongol and Ilomavis moved inside the real boundary (see Verified above).
 - All deviations/clarifications for the frontend are in `docs/CONTRACT_CHANGES.md`.
 
 ## Known gaps
-- Coverage is still the **DEV PLACEHOLDER** bounding box (`verified=false`). Load the official Kidapawan City polygon with
-  `load_coverage ... --verified` before formal testing.
+- Local dev coverage is the real PSGC-derived Kidapawan polygon but still `verified=false`, so the API still reports
+  `is_placeholder: true`. Re-load with `--verified` once it has been checked against the official boundary. A fresh volume
+  starts on the DEV PLACEHOLDER box until `load_coverage` is run.
 - Seed coordinates are approximate barangay centres, not surveyed addresses.
 - `scripts/smoke.py` leaves rows behind (a booking pair, a technician account, slots); `seed_demo --reset` cleans them.
 - No email/SMS delivery: the activation code is shown once to the admin, who hands it to the technician in person.

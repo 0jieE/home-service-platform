@@ -72,12 +72,14 @@ scripts/           backup.sh, restore.sh, smoke.py
 
 ## Coverage boundary
 A DEV PLACEHOLDER box (lat 6.93–7.12, lng 125.00–125.25, `verified=false`) is created by migration `geo.0002`.
-Replace it with an official Kidapawan City polygon (e.g. PSA/NAMRIA admin level 3 from HDX, exported as GeoJSON):
+For local dev, load the bundled PSGC-derived city polygon (not yet verified, so no `--verified`):
 ```powershell
-docker compose exec web python manage.py load_coverage /app/data/kidapawan.geojson `
-    --name "Kidapawan City" --source "PSA/NAMRIA ADM3 via HDX" --version 2023 --verified
+docker compose exec web python manage.py load_coverage data/kidapawan_boundary.geojson `
+    --name "City of Kidapawan" --source "PSA PSGC boundaries via faeldon/philippines-json-maps (hires)" --version "PSGC-2026-3q"
 ```
-(put the file under `backend/` so it is visible in the container at `/app/...`). The previous boundary is kept but inactive.
+Add `--verified` only after checking it against an official PSA/NAMRIA boundary. Tests never read this file: the
+`coverage` fixture in `conftest.py` always activates the placeholder box.
+Other boundary files must live under `backend/` to be visible in the container (`/app/...`). The previous boundary is kept but inactive.
 
 ## Backup / restore (pg_dump / pg_restore)
 From the repo root in Git Bash / WSL:

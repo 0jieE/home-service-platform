@@ -59,11 +59,11 @@ TECHNICIANS = [
     ("Joel", "Villanueva", "Sudapin", 7.0175, 125.0955, ["Electrical", "Appliance Repair"], 9, "TESDA EIM NC II"),
     ("Arnel", "Bautista", "Magsaysay", 7.0230, 125.0800, ["Carpentry", "Roofing"], 15, "TESDA Carpentry NC II"),
     ("Rowena", "Garcia", "Balindog", 7.0420, 125.0830, ["Computer & Phone Repair"], 5, "TESDA CSS NC II"),
-    ("Edgardo", "Mendoza", "Manongol", 6.9850, 125.0600, ["Welding", "Roofing", "Carpentry"], 18, "TESDA SMAW NC II"),
+    ("Edgardo", "Mendoza", "Manongol", 7.0218, 125.1238, ["Welding", "Roofing", "Carpentry"], 18, "TESDA SMAW NC II"),
     ("Liza", "Ramos", "Singao", 7.0050, 125.1150, ["Appliance Repair", "Aircon Repair"], 7, "TESDA RAC Servicing NC II"),
     ("Dennis", "Aquino", "Amas", 7.0200, 125.1000, ["Plumbing", "Electrical"], 4, "TESDA EIM NC II"),
     ("Noel", "Pascual", "Paco", 7.0300, 125.1150, ["Aircon Repair"], 3, "TESDA RAC Servicing NC II"),
-    ("Teodoro", "Lumanog", "Ilomavis", 7.0600, 125.1900, ["Plumbing", "Carpentry", "Welding"], 20, "TESDA Plumbing NC II"),
+    ("Teodoro", "Lumanog", "Ilomavis", 7.0315, 125.2065, ["Plumbing", "Carpentry", "Welding"], 20, "TESDA Plumbing NC II"),
 ]
 
 EXTRA_APPLICATIONS = [
