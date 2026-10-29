@@ -7,7 +7,7 @@ import { useAuth } from '@/auth/useAuth';
 import { useBookingSocket } from '@/features/shared/useBookingSocket';
 import { cn } from '@/lib/cn';
 import { useSocketConnected } from '@/lib/ws';
-import { initials } from '@/lib/format';
+import { formatDate, initials } from '@/lib/format';
 import type { Role } from '@/types/api';
 import { InstallAppButton } from '@/pwa/InstallAppButton';
 import { NAV, ROLE_LABEL, type NavItem } from './nav';
@@ -83,18 +83,33 @@ function SideNavLink({ item, badge, onClick }: { item: NavItem; badge: number; o
   );
 }
 
-function LiveIndicator({ compact }: { compact?: boolean }) {
+function LiveIndicator({ compact, tone = 'dark' }: { compact?: boolean; tone?: 'light' | 'dark' }) {
   const live = useSocketConnected();
+  const light = tone === 'light';
   return (
     <span
-      className={cn('inline-flex items-center gap-2 text-xs', live ? 'text-brand-200' : 'text-white/60')}
+      className={cn(
+        'inline-flex items-center gap-2 text-xs font-medium',
+        light
+          ? live
+            ? 'rounded-full bg-brand-50 px-3 py-1.5 text-brand-800 ring-1 ring-brand-200'
+            : 'rounded-full bg-slate-100 px-3 py-1.5 text-slate-600 ring-1 ring-slate-200'
+          : live
+            ? 'text-brand-200'
+            : 'text-white/60',
+      )}
       title={live ? 'Live updates on' : 'Live updates offline — refreshing every 30 seconds'}
     >
       <span className="relative flex size-2.5">
         {live && (
           <span className="absolute inset-0 animate-ping rounded-full bg-brand-300 opacity-60 motion-reduce:hidden" />
         )}
-        <span className={cn('relative size-2.5 rounded-full', live ? 'bg-brand-300' : 'bg-white/40')} />
+        <span
+          className={cn(
+            'relative size-2.5 rounded-full',
+            live ? (light ? 'bg-brand-500' : 'bg-brand-300') : light ? 'bg-slate-400' : 'bg-white/40',
+          )}
+        />
       </span>
       <span className={cn(compact && 'sr-only')}>
         {live ? 'Live updates on' : 'Offline — refreshing every 30 s'}
@@ -103,15 +118,20 @@ function LiveIndicator({ compact }: { compact?: boolean }) {
   );
 }
 
-function UserBlock({ name, role }: { name: string; role: Role }) {
+function UserBlock({ name, role, tone = 'dark' }: { name: string; role: Role; tone?: 'light' | 'dark' }) {
+  const light = tone === 'light';
   return (
     <div className="flex min-w-0 items-center gap-3">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-sun-400 font-display text-sm font-bold text-pine-900">
         {initials(name || '?')}
       </span>
       <span className="min-w-0 leading-tight">
-        <span className="block truncate text-sm font-semibold text-white">{name}</span>
-        <span className="block text-xs text-white/60">{ROLE_LABEL[role]}</span>
+        <span className={cn('block truncate text-sm font-semibold', light ? 'text-slate-900' : 'text-white')}>
+          {name}
+        </span>
+        <span className={cn('block text-xs', light ? 'text-slate-500' : 'text-white/60')}>
+          {ROLE_LABEL[role]}
+        </span>
       </span>
     </div>
   );
@@ -176,31 +196,38 @@ export function AppShell({ role }: { role: Role }) {
     <div className="min-h-dvh lg:flex">
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col bg-pine-900 lg:flex">
-        <div className="px-5 pt-6 pb-8">
+        <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-5">
           <Brand to={items[0]!.to} tone="dark" />
         </div>
-        <nav aria-label="Main" className="flex-1 space-y-1 overflow-y-auto px-3">
+        <nav aria-label="Main" className="flex-1 space-y-1 overflow-y-auto px-3 py-6">
           {navList()}
         </nav>
-        <div className="space-y-4 border-t border-white/10 px-5 py-5">
-          <InstallAppButton className="-mx-2 flex min-h-10 w-[calc(100%+1rem)] items-center gap-2 rounded-lg px-2 text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white focus-visible:outline-sun-400" />
-          <LiveIndicator />
-          <div className="flex items-center justify-between gap-2">
-            <UserBlock name={name} role={role} />
-            <button
-              type="button"
-              onClick={onLogout}
-              className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white focus-visible:outline-sun-400"
-              aria-label="Log out"
-              title="Log out"
-            >
-              <LogOut className="size-5" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
       </aside>
 
       <div className="min-w-0 flex-1">
+        {/* Desktop top bar: date, live status, install, account */}
+        <header className="sticky top-0 z-30 hidden border-b border-slate-200/80 bg-canvas/85 backdrop-blur-md lg:block">
+          <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-10">
+            <p className="text-sm text-slate-600">
+              <span className="font-semibold text-slate-800">{formatDate(new Date(), 'EEEE')}</span>,{' '}
+              {formatDate(new Date(), 'MMMM d')}
+            </p>
+            <div className="ml-auto flex items-center gap-3">
+              <LiveIndicator tone="light" />
+              <InstallAppButton className="inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-sm font-semibold text-brand-800 ring-1 ring-brand-200 hover:bg-brand-50" />
+              <span className="h-8 w-px bg-slate-200" aria-hidden="true" />
+              <UserBlock name={name} role={role} tone="light" />
+              <button
+                type="button"
+                onClick={onLogout}
+                className="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium text-slate-600 hover:bg-slate-200/60 hover:text-slate-900"
+              >
+                <LogOut className="size-5" aria-hidden="true" />
+                Log out
+              </button>
+            </div>
+          </div>
+        </header>
         {/* Mobile / tablet top bar (navigation lives in the bottom bar; “More” opens the drawer) */}
         <header className="sticky top-0 z-30 bg-pine-900 pt-[env(safe-area-inset-top)] lg:hidden">
           <div className="flex h-16 items-center gap-2 pr-2 pl-4 sm:px-6">
@@ -218,7 +245,7 @@ export function AppShell({ role }: { role: Role }) {
           </div>
         </header>
 
-        <main id="main" className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16">
+        <main id="main" className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-8 lg:pb-16">
           <Outlet />
         </main>
       </div>
