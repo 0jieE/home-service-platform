@@ -1,9 +1,10 @@
 # Render Blueprint — Home Service Technician Matching & Booking (Kidapawan City).
 # Spec: https://render.com/docs/blueprint-spec   Steps: docs/DEPLOY.md
 #
-# The PostgreSQL 17 database (db_service_platform, Singapore) already exists and is NOT created here:
+# The PostgreSQL 18 database (db_service_platform, Singapore) already exists and is NOT created here:
 # paste its INTERNAL Database URL into DATABASE_URL when you apply the Blueprint.
-# If Render assigns hostnames other than home-service-api / home-service-web .onrender.com, update
+# Live hosts: API https://home-service-api-32a1.onrender.com (Render added the -32a1 suffix), web
+# https://home-service-web.onrender.com. If a hostname changes again, update
 # CORS_ALLOWED_ORIGINS + CSRF_TRUSTED_ORIGINS (api) and VITE_API_BASE_URL + VITE_WS_BASE_URL (web, then redeploy).
 
 services:
@@ -26,11 +27,11 @@ services:
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: home-service-api.onrender.com,.onrender.com,localhost,127.0.0.1
+        value: home-service-api-32a1.onrender.com,.onrender.com,localhost,127.0.0.1
       - key: CORS_ALLOWED_ORIGINS
         value: https://home-service-web.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
-        value: https://home-service-api.onrender.com,https://home-service-web.onrender.com
+        value: https://home-service-api-32a1.onrender.com,https://home-service-web.onrender.com
       - key: REDIS_URL
         fromService:
           type: keyvalue
@@ -63,9 +64,9 @@ services:
       - key: NODE_VERSION
         value: 22.17.1
       - key: VITE_API_BASE_URL
-        value: https://home-service-api.onrender.com/api
+        value: https://home-service-api-32a1.onrender.com/api
       - key: VITE_WS_BASE_URL
-        value: wss://home-service-api.onrender.com/ws
+        value: wss://home-service-api-32a1.onrender.com/ws
       - key: VITE_GOOGLE_MAPS_API_KEY
         sync: false # the Google Maps browser key (map_platform_api_key.txt)
       - key: VITE_GOOGLE_MAPS_MAP_ID

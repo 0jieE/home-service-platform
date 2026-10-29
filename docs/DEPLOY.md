@@ -2,6 +2,12 @@ STATUS: DONE
 
 # Deploying to Render
 
+## Live (2026-10-29)
+- Web: https://home-service-web.onrender.com · API: https://home-service-api-32a1.onrender.com (Render added the
+  `-32a1` suffix because `home-service-api` was taken; that name belongs to another Render customer).
+- The real Kidapawan boundary (`load_coverage`, unverified) and the moved Manongol/Ilomavis seed points were applied to
+  the Render DB as well; all 10 located technicians and both demo customers are inside coverage.
+
 ## Summary (2026-10-29)
 - **Backend production settings**: `DATABASE_URL` support (dj-database-url, PostGIS engine forced, `conn_max_age=600`,
   SSL required when `DEBUG=False`), WhiteNoise for `/static/` (hashed + compressed manifest in production),
@@ -37,14 +43,14 @@ frontend domain to the Google Maps key restrictions.
    - `home-service-api` → **DATABASE_URL** = the internal URL from step 1.
    - `home-service-web` → **VITE_GOOGLE_MAPS_API_KEY** = contents of `map_platform_api_key.txt`.
 6. **Apply**. First build of the API takes ~5–10 min (GDAL image); the static site ~1–2 min.
-7. Check: open `https://home-service-api.onrender.com/api/health/` → `{"status":"ok"}`, then
+7. Check: open `https://home-service-api-32a1.onrender.com/api/health/` → `{"status":"ok"}`, then
    `https://home-service-web.onrender.com`.
 8. Google Cloud Console → APIs & Services → **Credentials** → the Maps key → Application restrictions → **Websites** →
    add `https://home-service-web.onrender.com/*` (keep `http://localhost:5173/*`) → Save. Changes can take a few minutes.
 9. Log in with the seed accounts (data copied from local):
    `admin@demo.local / Admin123!`, `customer@demo.local` or `customer2@demo.local / Customer123!`,
-   `tech1@demo.local … tech10@demo.local / Tech123!`. Django admin: `https://home-service-api.onrender.com/django-admin/`,
-   Swagger: `https://home-service-api.onrender.com/api/docs/`.
+   `tech1@demo.local … tech10@demo.local / Tech123!`. Django admin: `https://home-service-api-32a1.onrender.com/django-admin/`,
+   Swagger: `https://home-service-api-32a1.onrender.com/api/docs/`.
 
 ### If Render assigns different hostnames
 Render may append a suffix (e.g. `home-service-api-x1y2.onrender.com`) if a name is taken. Then:
@@ -134,5 +140,5 @@ Keep exactly one process running `-B` (beat).
 - Data path used: **copy of local data** (not the `seed_demo` fallback).
 - `prompts/DEPLOY_AGENT_PROMPT.md`: a 4-character fragment of the real DB password in its grep example was replaced by
   `<db-password-fragment>` before committing.
-- Not committed (changed by someone else during this session, left for their owner): `backend/apps/accounts/management/commands/seed_demo.py`
-  (two technician coordinates) and `backend/data/kidapawan_boundary.geojson`.
+- The boundary file and seed coordinate change (commit 088fc6c) were committed separately by their owner;
+  Render was updated to match afterwards.
