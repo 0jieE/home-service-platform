@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
-import { LogOut, MapPin, Menu, MoreHorizontal, X } from 'lucide-react';
+import { LogOut, MapPin, MoreHorizontal, X } from 'lucide-react';
 import { useAdminStats } from '@/api/admin';
 import { useBookings } from '@/api/bookings';
 import { useAuth } from '@/auth/useAuth';
@@ -189,17 +189,9 @@ export function AppShell({ role }: { role: Role }) {
       </aside>
 
       <div className="min-w-0 flex-1">
-        {/* Mobile / tablet top bar */}
+        {/* Mobile / tablet top bar (navigation lives in the bottom bar; “More” opens the drawer) */}
         <header className="sticky top-0 z-30 bg-pine-900 lg:hidden">
-          <div className="flex h-16 items-center gap-2 px-2 sm:px-4">
-            <button
-              type="button"
-              className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-white/80 hover:bg-white/10 focus-visible:outline-sun-400"
-              onClick={() => setDrawer(true)}
-              aria-label="Open menu"
-            >
-              <Menu className="size-6" />
-            </button>
+          <div className="flex h-16 items-center gap-2 pr-2 pl-4 sm:px-6">
             <Brand to={items[0]!.to} tone="dark" />
             <div className="ml-auto flex items-center gap-1">
               <LiveIndicator compact />
