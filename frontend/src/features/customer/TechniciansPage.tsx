@@ -67,13 +67,15 @@ export function TechniciansPage() {
         </p>
       </Instructions>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_200px_180px]">
-        <div className="relative">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-[1fr_200px_180px] sm:gap-3">
+        <div className="relative col-span-2 sm:col-span-1">
           <Search
-            className="pointer-events-none absolute top-[38px] left-3 size-5 text-slate-400"
+            className="pointer-events-none absolute top-3 left-3 size-5 text-slate-400 sm:top-[38px]"
             aria-hidden="true"
           />
           <Input
+            wrapperClassName="max-sm:space-y-0"
+            labelClassName="max-sm:sr-only"
             label="Search"
             type="search"
             placeholder="Name, barangay or skill"

@@ -58,11 +58,11 @@ export function ApplicationsPage() {
           them the one-time activation code.
         </p>
       </Instructions>
-      <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_220px]">
+      <div className="mb-4 grid grid-cols-[minmax(0,1fr)_9.5rem] gap-2 sm:grid-cols-[1fr_220px] sm:gap-3">
         <Input
           label="Search"
           type="search"
-          placeholder="Name, email or phone"
+          placeholder="Name, email, phone"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

@@ -23,14 +23,25 @@ interface FieldShellProps {
   error?: string;
   required?: boolean;
   className?: string;
+  /** e.g. `max-sm:sr-only` to keep the label for screen readers only on phones. */
+  labelClassName?: string;
   children: ReactNode;
 }
 
-export function FieldShell({ id, label, hint, error, required, className, children }: FieldShellProps) {
+export function FieldShell({
+  id,
+  label,
+  hint,
+  error,
+  required,
+  className,
+  labelClassName,
+  children,
+}: FieldShellProps) {
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-semibold text-slate-800">
+        <label htmlFor={id} className={cn('block text-sm font-semibold text-slate-800', labelClassName)}>
           {label}
           {required && (
             <span className="ml-0.5 text-red-600" aria-hidden="true">
@@ -63,10 +74,11 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hint?: ReactNode;
   error?: string;
   wrapperClassName?: string;
+  labelClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, hint, error, className, wrapperClassName, id, required, ...rest },
+  { label, hint, error, className, wrapperClassName, labelClassName, id, required, ...rest },
   ref,
 ) {
   const autoId = useId();
@@ -79,6 +91,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       error={error}
       required={required}
       className={wrapperClassName}
+      labelClassName={labelClassName}
     >
       <input
         ref={ref}

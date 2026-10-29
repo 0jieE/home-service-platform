@@ -73,8 +73,10 @@ export function UsersPage() {
         title="Users"
         description="Customers, technicians and administrators. Deactivated users cannot log in and technicians stop appearing in recommendations."
       />
-      <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_180px_180px]">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-[1fr_180px_180px] sm:gap-3">
         <Input
+          wrapperClassName="col-span-2 max-sm:space-y-0 sm:col-span-1"
+          labelClassName="max-sm:sr-only"
           label="Search"
           type="search"
           placeholder="Name or email"
