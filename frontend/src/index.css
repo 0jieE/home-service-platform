@@ -1,18 +1,56 @@
 @import 'tailwindcss';
 
-/* One accent (teal) + neutral grays. */
+/*
+ * Visual system — "Mt. Apo field kit".
+ * Pine (dark surfaces), Apo green (the one interactive accent), marigold (highlight on dark
+ * surfaces only), sage-tinted neutrals. The slate ramp is re-tinted toward green so every
+ * existing gray in the app shares the palette.
+ */
 @theme {
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --color-brand-50: #f0fdfa;
-  --color-brand-100: #ccfbf1;
-  --color-brand-200: #99f6e4;
-  --color-brand-300: #5eead4;
-  --color-brand-500: #14b8a6;
-  --color-brand-600: #0d9488;
-  --color-brand-700: #0f766e;
-  --color-brand-800: #115e59;
-  --color-brand-900: #134e4a;
+    'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
+
+  /* Apo green — interactive accent */
+  --color-brand-50: #edf7f1;
+  --color-brand-100: #d3ecdd;
+  --color-brand-200: #a8d8bc;
+  --color-brand-300: #74bd96;
+  --color-brand-400: #46a074;
+  --color-brand-500: #2a8459;
+  --color-brand-600: #1f7550;
+  --color-brand-700: #1a6646;
+  --color-brand-800: #16523a;
+  --color-brand-900: #133f2e;
+  --color-brand-950: #0c2a1f;
+
+  /* Pine — dark structural surfaces (sidebar, hero, footer) */
+  --color-pine-700: #22503e;
+  --color-pine-800: #1a4032;
+  --color-pine-900: #143426;
+  --color-pine-950: #0d241a;
+
+  /* Marigold — highlight on pine only (active nav marker, hero CTA, step numbers) */
+  --color-sun-200: #fbe3a4;
+  --color-sun-300: #f7cf6b;
+  --color-sun-400: #f0b429;
+  --color-sun-500: #d99a0b;
+
+  /* Sage-tinted neutrals (replaces Tailwind's blue-leaning slate) */
+  --color-slate-50: #f4f7f3;
+  --color-slate-100: #e9eee8;
+  --color-slate-200: #d8e0d7;
+  --color-slate-300: #bac6ba;
+  --color-slate-400: #8e9c90;
+  --color-slate-500: #66756a;
+  --color-slate-600: #4d5b51;
+  --color-slate-700: #39463d;
+  --color-slate-800: #26322a;
+  --color-slate-900: #17221b;
+  --color-slate-950: #0d150f;
+
+  --color-canvas: #eaf0e8;
 }
 
 @layer base {
@@ -20,7 +58,9 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-canvas text-slate-900 antialiased;
+    font-feature-settings: 'ss01' 0;
+    line-height: 1.55;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-brand-600;
@@ -28,13 +68,27 @@
   h1,
   h2,
   h3 {
-    @apply text-slate-900;
+    @apply font-display text-slate-900;
+    text-wrap: balance;
+  }
+  h1 {
+    letter-spacing: -0.02em;
+  }
+  p {
+    text-wrap: pretty;
   }
 }
 
 @layer components {
   .skeleton {
     @apply animate-pulse rounded-md bg-slate-200;
+  }
+  /* Topographic contour backdrop for pine surfaces (Mt. Apo). */
+  .contours {
+    background-image: url('/contours.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
 }
 

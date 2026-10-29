@@ -14,9 +14,9 @@ import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 /** Single-series charts: one accent hue, recessive grid/axes, hover tooltip, table view for accessibility. */
-const SERIES = '#0f766e';
-const GRID = '#e2e8f0';
-const AXIS = '#64748b';
+const SERIES = '#1f7550';
+const GRID = '#e9eee8';
+const AXIS = '#66756a';
 
 export interface Datum {
   label: string;
@@ -142,7 +142,7 @@ export function HBarCard({
           <CartesianGrid horizontal={false} stroke={GRID} />
           <XAxis type="number" allowDecimals={false} {...axisProps} />
           <YAxis type="category" dataKey="label" {...axisProps} width={150} tick={{ fontSize: 12 }} />
-          <Tooltip cursor={{ fill: '#f1f5f9' }} content={<ChartTooltip unit={unit} />} />
+          <Tooltip cursor={{ fill: '#edf7f1' }} content={<ChartTooltip unit={unit} />} />
           <Bar dataKey="value" fill={SERIES} radius={[0, 4, 4, 0]} maxBarSize={26} />
         </BarChart>
       </ResponsiveContainer>
@@ -176,7 +176,7 @@ export function BarCard({
             textAnchor={data.length > 5 ? 'end' : 'middle'}
           />
           <YAxis allowDecimals={false} {...axisProps} />
-          <Tooltip cursor={{ fill: '#f1f5f9' }} content={<ChartTooltip unit={unit} />} />
+          <Tooltip cursor={{ fill: '#edf7f1' }} content={<ChartTooltip unit={unit} />} />
           <Bar dataKey="value" fill={SERIES} radius={[4, 4, 0, 0]} maxBarSize={44} />
         </BarChart>
       </ResponsiveContainer>

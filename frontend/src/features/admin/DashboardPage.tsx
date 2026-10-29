@@ -35,12 +35,12 @@ function Kpi({
 }) {
   const body = (
     <CardBody className="flex items-center gap-3">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-brand-800">
         {icon}
       </span>
       <div className="min-w-0">
-        <p className="text-2xl font-bold tabular-nums">{value}</p>
-        <p className="truncate text-sm text-slate-500">{label}</p>
+        <p className="font-display text-[1.75rem] leading-none font-bold tabular-nums">{value}</p>
+        <p className="mt-1 text-sm leading-tight text-slate-600">{label}</p>
       </div>
     </CardBody>
   );

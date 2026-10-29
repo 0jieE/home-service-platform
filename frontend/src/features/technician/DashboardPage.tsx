@@ -72,42 +72,46 @@ export function TechnicianDashboardPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-sun-200 text-pine-900">
               <Inbox className="size-6" />
             </span>
             <div>
-              <p className="text-2xl font-bold">{pending.data?.count ?? '—'}</p>
+              <p className="font-display text-[1.75rem] leading-none font-bold">
+                {pending.data?.count ?? '—'}
+              </p>
               <p className="text-sm text-slate-500">Pending requests</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-brand-100 text-brand-800">
               <CalendarClock className="size-6" />
             </span>
             <div>
-              <p className="text-2xl font-bold">{upcoming.data ? todays.length : '—'}</p>
+              <p className="font-display text-[1.75rem] leading-none font-bold">
+                {upcoming.data ? todays.length : '—'}
+              </p>
               <p className="text-sm text-slate-500">Jobs today</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-lg bg-yellow-50 text-yellow-600">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-pine-900 text-sun-400">
               <Star className="size-6" />
             </span>
             <div>
               {me.data?.rating_count ? (
                 <>
-                  <p className="flex items-center gap-2 text-2xl font-bold">
+                  <p className="flex items-center gap-2 font-display text-[1.75rem] leading-none font-bold">
                     {(me.data.rating_avg ?? 0).toFixed(1)} <RatingStars value={me.data.rating_avg ?? 0} />
                   </p>
                   <p className="text-sm text-slate-500">{me.data.rating_count} reviews</p>
                 </>
               ) : (
                 <>
-                  <p className="text-lg font-semibold">No ratings yet</p>
+                  <p className="font-display text-lg font-semibold">No ratings yet</p>
                   <p className="text-sm text-slate-500">Complete jobs to get reviews</p>
                 </>
               )}

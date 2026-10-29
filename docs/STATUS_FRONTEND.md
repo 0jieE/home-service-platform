@@ -11,6 +11,7 @@ STATUS: DONE
 - [x] F6 Admin: dashboard KPIs + Recharts, applications + verification + approve/reject + create account (one-time code), users, categories, disputes, recommendation settings (sum = 1, freeze), coverage view
 - [x] F7 Realtime: `useBookingSocket` (backoff, 4401 → refresh → reconnect, reconnect on token rotation), query invalidation + plain-language toasts, 30 s polling fallback when offline
 - [x] F8 Polish & verify: responsive pass at 375 px / 1280 px (no horizontal overflow on any screen), loading/empty/error states, build + lint + unit tests + e2e green against the live backend
+- [x] Visual refresh (2026-10-29): new colour/type system, pine sidebar, landing hero, restyled shared components — API calls and routes unchanged; rechecked at 375 / 1280 px, booking e2e green
 
 ## How to run
 ```powershell
@@ -42,7 +43,7 @@ Tooling: vite 8.3.5, @vitejs/plugin-react 6.1.2, typescript 6.0.3, tailwindcss 4
 ## Decisions
 - **Scaffold** written by hand (no interactive `npm create vite`), same layout as the Vite react-ts template; `@` alias → `src/`.
 - **Tokens**: access token in memory, refresh token in `localStorage` (`sp.refresh`); session restored on load via `/auth/token/refresh/` + `/auth/me/`. Refresh is single-flight; a failed refresh clears the session.
-- **Single accent** teal (`brand-700 #0f766e`) + slate grays; light theme only; 44 px minimum tap targets; visible focus outlines.
+- **Visual system “Mt. Apo field kit”** (replaces the plain teal-on-white look): pine `#143426` for structural dark surfaces (desktop sidebar, mobile top bar, public header, landing hero, footer); Apo green (`brand-700 #1a6646`) remains the single interactive accent for buttons, links and focus; marigold `#f0b429` is a highlight used only on pine (active-nav marker, hero CTA, rank badges and map markers); the page background is a sage canvas `#eaf0e8`. Tailwind's `slate` ramp is re-tinted toward green in `@theme`, so every existing gray shares the palette without touching each screen. Type: Bricolage Grotesque for headings and large figures, Atkinson Hyperlegible Next for body (chosen for legibility for a broad local audience), both from Google Fonts with system fallbacks. Hierarchy shows in radius: cards and panels 16 px, controls 10 px, badges fully rounded. Table headers use sentence case. Landing hero has a generated topographic contour backdrop (`public/contours.svg`, twin summits for Mt. Apo). Light theme only; 44 px minimum tap targets; visible focus outlines.
 - **Maps**: one `<APIProvider libraries={["places","geocoding","marker"]}>`; no key → inline message + manual lat/lng fallback in the LocationPicker, so the app never crashes. Address search uses `AutocompleteSuggestion.fetchAutocompleteSuggestions` with a session token, `includedRegionCodes: ["ph"]` and `locationRestriction` = the coverage polygon's bounding box (bias around the city center if the polygon is missing). Legacy Places is not used.
 - **Coverage**: the picker checks `POST /coverage/check/` on every pin change (debounced). `outside` blocks submit with “This location is outside Kidapawan City coverage”. A failed check does not block — the server re-validates on submit.
 - **Distances** always shown as “≈ X.X km away (straight-line)”. Scores shown with 3 decimals, weights with 2 — display only.
@@ -70,6 +71,7 @@ None blocking. Backend extras beyond contract v1 that the UI uses or tolerates:
 - The DoD walkthrough's “start” step can't happen for a booking tomorrow at 9:00: the backend allows start only within `START_EARLY_MINUTES` (60) of the start time. The e2e covers the full lifecycle with a booking starting within the next 30 minutes on a slot it creates through the API.
 - The e2e dispute test consumes the single seeded open dispute; re-run `seed_demo` to exercise it again (it skips cleanly otherwise). The e2e also confirms or cancels leftover tech1 bookings of earlier runs.
 - Once during e2e development, a full page reload immediately after login redirected to `/login`; it did not reproduce in 6 scripted retries or 3 later full runs. The likely cause is refresh-token rotation: if a refresh is in flight when the page unloads, the rotated token is lost and the old one is blacklisted. Normal use (no reload mid-refresh) is unaffected.
-- The TanStack Query devtools button (dev builds only) overlaps the first mobile bottom-nav item at 375 px; it is absent from production builds.
+- The TanStack Query devtools button (dev builds only) overlaps the first mobile bottom-nav item at 375 px and the user block in the desktop sidebar; it is absent from production builds.
+- Fonts load from Google Fonts; offline or blocked, the UI falls back to system sans-serif.
 - The coverage polygon is the backend's development placeholder; the admin dashboard and coverage page show the warning badge until an official boundary is loaded.
 - Google Maps key restrictions (HTTP referrers) must be set in Cloud Console before deployment.

@@ -27,17 +27,15 @@ export function BookingCard({
     <Link
       to={bookingPath(viewer, booking.id)}
       className={
-        'group block rounded-xl border bg-white p-4 shadow-sm transition hover:border-brand-300 hover:shadow ' +
-        (highlight ? 'border-red-300 ring-1 ring-red-200' : 'border-slate-200')
+        'group block rounded-2xl border bg-white p-4 transition-colors hover:border-brand-400 sm:p-5 ' +
+        (highlight ? 'border-red-300 ring-1 ring-red-200' : 'border-slate-200/80')
       }
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-xs font-medium text-slate-500">Booking #{booking.id}</p>
-          <h3 className="mt-0.5 font-semibold text-slate-900">{booking.category.name}</h3>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+        <p className="text-xs font-medium text-slate-500">Booking #{booking.id}</p>
         <BookingStatusBadges booking={booking} />
       </div>
+      <h3 className="mt-1 text-lg leading-snug font-semibold text-slate-900">{booking.category.name}</h3>
       <dl className="mt-3 grid gap-1.5 text-sm text-slate-600">
         <div className="flex items-center gap-2">
           <CalendarClock className="size-4 shrink-0 text-slate-400" aria-hidden="true" />

@@ -39,20 +39,20 @@ export function ResultCard({
       aria-label={`Rank ${result.rank}: ${t.full_name}`}
       onMouseEnter={onFocus}
       className={cn(
-        'rounded-xl border bg-white p-4 shadow-sm transition',
-        selected ? 'border-amber-400 ring-2 ring-amber-200' : 'border-slate-200',
+        'rounded-2xl border bg-white p-4 shadow-sm transition',
+        selected ? 'border-sun-400 ring-2 ring-sun-200' : 'border-slate-200/80',
       )}
     >
       <div className="flex items-start gap-3">
         <span
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-700 text-base font-bold text-white"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-pine-900 font-display text-base font-bold text-sun-400"
           aria-label={`Rank ${result.rank}`}
         >
           {result.rank}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <h3 className="text-base font-semibold">
+            <h3 className="text-lg leading-snug font-semibold">
               <Link to={`/c/technicians/${t.id}`} className="hover:underline">
                 {t.full_name}
               </Link>

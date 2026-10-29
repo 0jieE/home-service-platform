@@ -11,7 +11,7 @@ export function Table({
   caption?: string;
 }) {
   return (
-    <div className={cn('overflow-x-auto rounded-xl border border-slate-200 bg-white', className)}>
+    <div className={cn('overflow-x-auto rounded-2xl border border-slate-200/80 bg-white', className)}>
       <table className="min-w-full divide-y divide-slate-200 text-sm">
         {caption && <caption className="sr-only">{caption}</caption>}
         {children}
@@ -21,7 +21,7 @@ export function Table({
 }
 
 export function THead({ children }: { children: ReactNode }) {
-  return <thead className="bg-slate-50">{children}</thead>;
+  return <thead className="bg-slate-50/80">{children}</thead>;
 }
 
 export function TBody({ children }: { children: ReactNode }) {
@@ -29,17 +29,14 @@ export function TBody({ children }: { children: ReactNode }) {
 }
 
 export function Tr({ className, ...rest }: HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={cn('hover:bg-slate-50/60', className)} {...rest} />;
+  return <tr className={cn('hover:bg-brand-50/50', className)} {...rest} />;
 }
 
 export function Th({ className, ...rest }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
       scope="col"
-      className={cn(
-        'px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase',
-        className,
-      )}
+      className={cn('px-4 py-3 text-left text-[0.8rem] font-semibold text-slate-600', className)}
       {...rest}
     />
   );

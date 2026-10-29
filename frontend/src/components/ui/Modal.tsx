@@ -79,7 +79,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
       <div
-        className="absolute inset-0 bg-slate-900/50"
+        className="absolute inset-0 bg-pine-950/55 backdrop-blur-[2px]"
         aria-hidden="true"
         onClick={() => dismissible && onClose()}
       />
@@ -97,7 +97,7 @@ export function Modal({
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4">
           <div>
-            <h2 id={titleId} className="text-lg font-semibold">
+            <h2 id={titleId} className="text-xl font-semibold tracking-tight">
               {title}
             </h2>
             {description && (

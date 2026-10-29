@@ -53,7 +53,7 @@ export function Tabs<T extends string>({
             className={cn(
               '-mb-px inline-flex min-h-11 items-center gap-2 border-b-2 px-4 text-sm font-medium whitespace-nowrap transition-colors',
               active
-                ? 'border-brand-700 text-brand-800'
+                ? 'border-brand-600 font-semibold text-brand-900'
                 : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700',
             )}
           >

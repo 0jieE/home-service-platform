@@ -64,7 +64,7 @@ export function DisputesPage() {
         <>
           <ul className="space-y-3">
             {q.data.results.map((d) => (
-              <li key={d.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <li key={d.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <p className="text-xs text-slate-500">

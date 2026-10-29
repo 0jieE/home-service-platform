@@ -9,7 +9,7 @@ import {
 import { cn } from '@/lib/cn';
 
 const controlBase =
-  'block w-full rounded-lg border bg-white px-3 text-base text-slate-900 shadow-sm placeholder:text-slate-400 ' +
+  'block w-full rounded-[10px] border bg-white px-3 text-base text-slate-900 shadow-[inset_0_1px_1px_0_rgb(12_42_31/0.04)] placeholder:text-slate-400 hover:border-slate-400 ' +
   'focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/30 disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm';
 
 function controlClass(error?: string, className?: string) {
@@ -30,7 +30,7 @@ export function FieldShell({ id, label, hint, error, required, className, childr
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-slate-800">
+        <label htmlFor={id} className="block text-sm font-semibold text-slate-800">
           {label}
           {required && (
             <span className="ml-0.5 text-red-600" aria-hidden="true">
@@ -193,7 +193,7 @@ export function Checkbox({
         {...rest}
       />
       <span>
-        <span className="block text-sm font-medium text-slate-800">{label}</span>
+        <span className="block text-sm font-semibold text-slate-800">{label}</span>
         {description && <span className="block text-xs text-slate-500">{description}</span>}
       </span>
     </label>

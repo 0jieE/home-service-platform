@@ -32,7 +32,7 @@ export function SkeletonList({ rows = 3, className }: { rows?: number; className
   return (
     <div className={cn('space-y-3', className)} aria-busy="true" aria-label="Loading">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+        <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
           <Skeleton className="mb-3 h-4 w-1/3" />
           <Skeleton className="mb-2 h-3 w-2/3" />
           <Skeleton className="h-3 w-1/2" />

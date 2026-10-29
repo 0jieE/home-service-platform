@@ -102,7 +102,7 @@ function MapPickerSurface({
               if (ll) onPoint({ lat: ll.lat(), lng: ll.lng() }, reverse);
             }}
           >
-            <Pin background="#0f766e" borderColor="#134e4a" glyphColor="#ffffff" />
+            <Pin background="#1a6646" borderColor="#0c2a1f" glyphColor="#ffffff" />
           </AdvancedMarker>
         )}
         <PanTo target={geoTarget} zoom={15} />

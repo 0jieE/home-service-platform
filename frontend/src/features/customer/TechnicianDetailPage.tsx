@@ -50,11 +50,11 @@ export function TechnicianDetailPage() {
 
       <Card>
         <CardBody className="flex flex-col gap-4 sm:flex-row sm:items-start">
-          <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xl font-bold text-brand-800">
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-pine-900 font-display text-xl font-bold text-sun-400">
             {initials(t.full_name)}
           </span>
           <div className="min-w-0 flex-1 space-y-2">
-            <h1 className="text-2xl font-bold tracking-tight">{t.full_name}</h1>
+            <h1 className="text-[1.75rem] leading-tight font-bold sm:text-[2.25rem]">{t.full_name}</h1>
             <RatingLine avg={t.rating_avg} count={t.rating_count} />
             <Specializations items={t.specializations} />
             <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600">

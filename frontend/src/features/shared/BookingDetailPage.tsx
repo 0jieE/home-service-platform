@@ -140,7 +140,7 @@ export function BookingDetailPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm text-slate-500">Booking #{b.id}</p>
-          <h1 className="text-2xl font-bold tracking-tight">{b.category.name}</h1>
+          <h1 className="text-[1.75rem] leading-tight font-bold sm:text-[2.25rem]">{b.category.name}</h1>
           <p className="text-sm text-slate-600">{formatRange(b.start, b.end)}</p>
         </div>
         <BookingStatusBadges booking={b} />

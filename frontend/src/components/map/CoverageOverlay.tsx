@@ -12,10 +12,10 @@ export function CoverageOverlay({ coverage }: { coverage?: Coverage }) {
   return (
     <Polygon
       paths={paths}
-      strokeColor="#0f766e"
+      strokeColor="#1a6646"
       strokeOpacity={0.9}
       strokeWeight={2}
-      fillColor="#14b8a6"
+      fillColor="#46a074"
       fillOpacity={0.04}
       clickable={false}
     />

@@ -49,7 +49,7 @@ export function RequestsPage() {
               <li
                 key={b.id}
                 className={cn(
-                  'rounded-xl border bg-white p-4 shadow-sm',
+                  'rounded-2xl border bg-white p-4 shadow-sm',
                   b.conflicts_with_reserved ? 'border-red-300 ring-1 ring-red-200' : 'border-slate-200',
                 )}
               >

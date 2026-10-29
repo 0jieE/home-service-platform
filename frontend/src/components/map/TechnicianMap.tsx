@@ -31,7 +31,7 @@ export function TechnicianMap({
     <BaseMap className={className} center={customer ?? undefined} ariaLabel="Map of recommended technicians">
       {customer && isValidPoint(customer) && (
         <AdvancedMarker position={customer} title="Your service location" zIndex={1000}>
-          <Pin background="#0f172a" borderColor="#020617" glyphColor="#ffffff" />
+          <Pin background="#1a6646" borderColor="#0c2a1f" glyphColor="#ffffff" />
         </AdvancedMarker>
       )}
       {valid.map((m) => (
@@ -44,8 +44,8 @@ export function TechnicianMap({
         >
           <span
             className={cn(
-              'flex size-9 items-center justify-center rounded-full border-2 border-white text-sm font-bold shadow-md',
-              selectedId === m.id ? 'scale-110 bg-amber-500 text-white' : 'bg-brand-700 text-white',
+              'flex size-9 items-center justify-center rounded-full border-2 border-white font-display text-sm font-bold shadow-md',
+              selectedId === m.id ? 'scale-110 bg-sun-400 text-pine-950' : 'bg-pine-900 text-sun-400',
             )}
           >
             {m.rank}
@@ -71,7 +71,7 @@ export function PointMap({
   return (
     <BaseMap className={className} center={point} zoom={15} ariaLabel={`Map: ${title}`}>
       <AdvancedMarker position={point} title={title}>
-        <Pin background="#0f766e" borderColor="#134e4a" glyphColor="#ffffff" />
+        <Pin background="#143426" borderColor="#0d241a" glyphColor="#f0b429" />
       </AdvancedMarker>
     </BaseMap>
   );

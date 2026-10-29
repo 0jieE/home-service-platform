@@ -3,20 +3,25 @@ import { Link, type LinkProps } from 'react-router';
 import { cn } from '@/lib/cn';
 import { Spinner } from './Spinner';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+/** `sun` and `onDark` are for pine surfaces only (landing hero, public header). */
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'sun' | 'onDark';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors select-none ' +
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 ' +
+  'inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors select-none ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-2 ' +
   'disabled:cursor-not-allowed disabled:opacity-60';
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-brand-700 text-white hover:bg-brand-800 shadow-sm',
-  secondary: 'bg-brand-50 text-brand-800 hover:bg-brand-100',
-  outline: 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50',
-  ghost: 'text-slate-700 hover:bg-slate-100',
+  primary:
+    'bg-brand-700 text-white hover:bg-brand-800 shadow-[0_1px_0_0_rgb(255_255_255/0.15)_inset,0_1px_2px_0_rgb(12_42_31/0.25)]',
+  secondary: 'bg-brand-100 text-brand-900 hover:bg-brand-200',
+  outline: 'border border-slate-300 bg-white text-slate-800 hover:border-brand-400 hover:bg-brand-50',
+  ghost: 'text-brand-800 hover:bg-brand-50',
   danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
+  sun: 'bg-sun-400 text-pine-950 hover:bg-sun-300 focus-visible:outline-sun-300',
+  onDark:
+    'border border-white/25 text-white hover:border-white/50 hover:bg-white/10 focus-visible:outline-sun-300',
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -30,7 +35,8 @@ export function buttonClasses(
   size: ButtonSize = 'md',
   className?: string,
 ) {
-  return cn(base, variants[variant], sizes[size], className);
+  const focus = variant === 'sun' || variant === 'onDark' ? '' : 'focus-visible:outline-brand-600';
+  return cn(base, focus, variants[variant], sizes[size], className);
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

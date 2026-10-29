@@ -123,7 +123,7 @@ export function TechniciansPage() {
               <li key={t.id}>
                 <Link
                   to={`/c/technicians/${t.id}`}
-                  className="flex h-full gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-brand-300 hover:shadow"
+                  className="flex h-full gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-brand-300 hover:shadow"
                 >
                   <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-800">
                     {initials(t.full_name)}
