@@ -34,7 +34,10 @@ export function Tabs<T extends string>({
     <div
       role="tablist"
       aria-label={label}
-      className={cn('flex gap-1 overflow-x-auto border-b border-slate-200', className)}
+      className={cn(
+        'no-scrollbar flex gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain border-b border-slate-200',
+        className,
+      )}
     >
       {items.map((item, i) => {
         const active = item.value === value;
@@ -51,7 +54,7 @@ export function Tabs<T extends string>({
             onKeyDown={(e) => onKeyDown(e, i)}
             onClick={() => onChange(item.value)}
             className={cn(
-              '-mb-px inline-flex min-h-11 items-center gap-2 border-b-2 px-4 text-sm font-medium whitespace-nowrap transition-colors',
+              '-mb-px inline-flex min-h-11 shrink-0 items-center gap-2 border-b-2 px-3 text-sm font-medium whitespace-nowrap transition-colors sm:px-4',
               active
                 ? 'border-brand-600 font-semibold text-brand-900'
                 : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700',

@@ -96,6 +96,13 @@
   .skeleton {
     @apply animate-pulse rounded-md bg-slate-200;
   }
+  /* Horizontally swipeable rows (tabs) without a visible scrollbar. */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   /* Topographic contour backdrop for pine surfaces (Mt. Apo). */
   .contours {
     background-image: url('/contours.svg');
