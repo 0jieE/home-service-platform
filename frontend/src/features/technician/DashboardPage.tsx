@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { AlertTriangle, CalendarClock, Inbox, Star } from 'lucide-react';
 import { useBookings } from '@/api/bookings';
@@ -10,6 +11,7 @@ import { Alert, Instructions, PageHeader } from '@/components/ui/PageHeader';
 import { RatingStars } from '@/components/ui/RatingStars';
 import { SkeletonList } from '@/components/ui/Spinner';
 import { errorMessage } from '@/lib/errors';
+import { cn } from '@/lib/cn';
 import { manilaDateOf, manilaDateString, titleCase } from '@/lib/format';
 
 const FIELD_LABEL: Record<string, string> = {
@@ -24,6 +26,41 @@ const FIELD_LABEL: Record<string, string> = {
   years_experience: 'years of experience',
   availability: 'availability schedule',
 };
+
+/** Compact on phones (icon above the number) so all three tiles fit one row. */
+function StatTile({
+  icon,
+  iconClassName,
+  value,
+  label,
+  hint,
+}: {
+  icon: ReactNode;
+  iconClassName: string;
+  value: ReactNode;
+  label: string;
+  hint?: string;
+}) {
+  return (
+    <Card className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:gap-3 sm:px-6 sm:py-5">
+      <span
+        className={cn(
+          'flex size-9 shrink-0 items-center justify-center rounded-xl sm:size-11',
+          iconClassName,
+        )}
+      >
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="flex items-center gap-2 font-display text-2xl leading-none font-bold sm:text-[1.75rem]">
+          {value}
+        </p>
+        <p className="mt-1 text-xs leading-tight text-slate-600 sm:text-sm">{label}</p>
+        {hint && <p className="mt-0.5 hidden text-sm text-slate-500 sm:block">{hint}</p>}
+      </div>
+    </Card>
+  );
+}
 
 export function TechnicianDashboardPage() {
   const me = useTechMe();
@@ -69,55 +106,42 @@ export function TechnicianDashboardPage() {
         </Alert>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-xl bg-sun-200 text-pine-900">
-              <Inbox className="size-6" />
-            </span>
-            <div>
-              <p className="font-display text-[1.75rem] leading-none font-bold">
-                {pending.data?.count ?? '—'}
-              </p>
-              <p className="text-sm text-slate-500">Pending requests</p>
-            </div>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-xl bg-brand-100 text-brand-800">
-              <CalendarClock className="size-6" />
-            </span>
-            <div>
-              <p className="font-display text-[1.75rem] leading-none font-bold">
-                {upcoming.data ? todays.length : '—'}
-              </p>
-              <p className="text-sm text-slate-500">Jobs today</p>
-            </div>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody className="flex items-center gap-3">
-            <span className="flex size-11 items-center justify-center rounded-xl bg-pine-900 text-sun-400">
-              <Star className="size-6" />
-            </span>
-            <div>
-              {me.data?.rating_count ? (
-                <>
-                  <p className="flex items-center gap-2 font-display text-[1.75rem] leading-none font-bold">
-                    {(me.data.rating_avg ?? 0).toFixed(1)} <RatingStars value={me.data.rating_avg ?? 0} />
-                  </p>
-                  <p className="text-sm text-slate-500">{me.data.rating_count} reviews</p>
-                </>
-              ) : (
-                <>
-                  <p className="font-display text-lg font-semibold">No ratings yet</p>
-                  <p className="text-sm text-slate-500">Complete jobs to get reviews</p>
-                </>
-              )}
-            </div>
-          </CardBody>
-        </Card>
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <StatTile
+          icon={<Inbox className="size-5 sm:size-6" />}
+          iconClassName="bg-sun-200 text-pine-900"
+          value={pending.data?.count ?? '—'}
+          label="Pending requests"
+        />
+        <StatTile
+          icon={<CalendarClock className="size-5 sm:size-6" />}
+          iconClassName="bg-brand-100 text-brand-800"
+          value={upcoming.data ? todays.length : '—'}
+          label="Jobs today"
+        />
+        {me.data?.rating_count ? (
+          <StatTile
+            icon={<Star className="size-5 sm:size-6" />}
+            iconClassName="bg-pine-900 text-sun-400"
+            value={
+              <>
+                {(me.data.rating_avg ?? 0).toFixed(1)}
+                <span className="hidden md:inline-flex">
+                  <RatingStars value={me.data.rating_avg ?? 0} />
+                </span>
+              </>
+            }
+            label={`${me.data.rating_count} ${me.data.rating_count === 1 ? 'review' : 'reviews'}`}
+          />
+        ) : (
+          <StatTile
+            icon={<Star className="size-5 sm:size-6" />}
+            iconClassName="bg-pine-900 text-sun-400"
+            value="—"
+            label="No ratings yet"
+            hint="Complete jobs to get reviews"
+          />
+        )}
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
